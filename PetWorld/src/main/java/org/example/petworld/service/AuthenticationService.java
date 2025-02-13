@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.example.petworld.configuration.CustomJwtDecoder;
 import org.example.petworld.dto.request.AuthenticationRequest;
 import org.example.petworld.dto.request.LogoutRequest;
 import org.example.petworld.dto.request.RefreshRequest;
@@ -23,8 +24,11 @@ import org.example.petworld.enums.ErrorCode;
 import org.example.petworld.exception.AppException;
 import org.example.petworld.mapper.*;
 import org.example.petworld.repository.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -52,10 +56,11 @@ public class AuthenticationService {
     PetCenterService petCenterService;
     PetCareServicesService petCareServicesService;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    CustomJwtDecoder jwtDecoder;
 
     @NonFinal
-    public static final String SIGNER_KEY =
-            "YD8HzTlo8PGQ4jbvy8JzRWDEPHj3ESBodMOy2VN18m34naEMGKl3PvThviChOLfY";
+    @Value("${signer_key}")
+    String SIGNER_KEY;
     private final UsersMapper usersMapper;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -122,22 +127,21 @@ public class AuthenticationService {
                 .build();
     }
 
-    public Object getMyInfo () {
-        String role = String.valueOf(SecurityContextHolder.getContext()
-                .getAuthentication().getAuthorities());
-        Long userId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
-                .getContext().getAuthentication()).getToken().getSubject());
+    public Object getMyInfo (String token) {
+        Jwt decodedJwt = jwtDecoder.decode(token);
+        String role = decodedJwt.getClaim("scope");
+        Long userId = Long.valueOf(decodedJwt.getSubject());
         return switch (role) {
-            case "[ROLE_PET_OWNER]" ->
+            case "PET_OWNER" ->
                     petOwnerMapper.toPetOwnerResponse(petOwnerRepository.findByIdAndIsDeleted(userId, false)
                             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
-            case "[ROLE_PET_CENTER]" ->
+            case "PET_CENTER" ->
                     petCenterMapper.toPetCenterResponse(petCenterRepository.findByIdAndIsDeleted(userId, false)
                             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
-            case "[ROLE_PET_CARE_SERVICES]" ->
+            case "PET_CARE_SERVICES" ->
                     petCareServicesMapper.toPetCareServicesResponse(petCareServicesRepository.findByIdAndIsDeleted(userId, false)
                             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
-            case "[ROLE_PET]" -> petMapper.toPetResponse(petRepository.findByIdAndIsDeleted(userId, false)
+            case "PET" -> petMapper.toPetResponse(petRepository.findByIdAndIsDeleted(userId, false)
                     .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND)));
             default -> throw new AppException(ErrorCode.UNAUTHENTICATED);
         };

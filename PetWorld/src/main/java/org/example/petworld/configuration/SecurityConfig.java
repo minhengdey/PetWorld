@@ -18,6 +18,10 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -25,29 +29,32 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Autowired
-    private CustomJwtDecoder customJwtDecoder;
+    private JwtCookieFilter jwtCookieFilter;
 
     private final String[] PUBLIC_ENDPOINT ={"/user", "/auth/log-in",
-            "/auth/register", "/auth/log-out", "/auth/refresh", "/auth/addNewProfile/**"};
+            "/auth/process-register", "/auth/log-out", "/auth/refresh",
+            "/auth/addNewProfile/**", "/api/auth/log-in", "/api/upload"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/myInfo").permitAll()
-                        .requestMatchers("/permission/**").permitAll()
-                        .requestMatchers("/role/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/myInfo").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/show-register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/log-in").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated());
 
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer ->
-                        jwtConfigurer.decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-        );
+        httpSecurity.addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class);
 
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request ->
+                        new CorsConfiguration().applyPermitDefaultValues()));
+        ;
 
         return httpSecurity.build();
     }
@@ -65,4 +72,18 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     };
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")  // Áp dụng cho tất cả API
+                        .allowedOrigins("http://localhost:63342")  // Cho phép frontend truy cập
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")  // Các phương thức HTTP
+                        .allowCredentials(true); // Cho phép gửi cookie/token
+            }
+        };
+    }
+
 }

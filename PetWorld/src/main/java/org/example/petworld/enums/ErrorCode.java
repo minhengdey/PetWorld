@@ -30,7 +30,9 @@ public enum ErrorCode {
     ROLE_EXISTED(1016, "Role existed", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(1017, "Role not found", HttpStatus.NOT_FOUND),
     PERMISSION_EXISTED(1018, "Permission existed", HttpStatus.BAD_REQUEST),
-    PERMISSION_NOT_FOUND(1019, "Permission not found", HttpStatus.NOT_FOUND);
+    PERMISSION_NOT_FOUND(1019, "Permission not found", HttpStatus.NOT_FOUND),
+    FILE_UPLOAD_ERROR(1020, "Cannot upload file", HttpStatus.BAD_REQUEST),
+    COOKIE_NOT_FOUND(1021, "Cannot find cookie", HttpStatus.NOT_FOUND);
 
     int code;
     String message;

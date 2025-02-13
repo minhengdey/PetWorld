@@ -7,12 +7,16 @@ import org.example.petworld.entity.*;
 import java.util.Date;
 import java.util.Set;
 
+@Getter
+@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PetResponse {
+    Long id;
+
     String name;
 
     Date dob;
@@ -23,9 +27,15 @@ public class PetResponse {
 
     String breed;
 
-    float weight;
+    Float weight;
 
-    String pathProfileImage;
+    String avatar;
+
+    Boolean isNeutered;
+
+    Boolean isVaccinated;
+
+    String color;
 
     PetOwnerEntity petOwner;
 
@@ -43,7 +53,7 @@ public class PetResponse {
 
     Date deletedAt;
 
-    boolean isDeleted;
+    Boolean isDeleted;
 
     String role;
 

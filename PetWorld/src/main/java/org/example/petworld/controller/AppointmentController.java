@@ -19,16 +19,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/appointment")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@PreAuthorize("hasRole('PET') or hasRole('PET_CARE_SERVICES')")
+@PreAuthorize("hasRole('PET_OWNER') or hasRole('PET_CARE_SERVICES')")
 public class AppointmentController {
     AppointmentService appointmentService;
 
-    @PostMapping(value = "/{serviceId}")
-    @PreAuthorize("hasRole('PET')")
-    public ApiResponse<AppointmentResponse> createAppointment (@RequestBody @Valid AppointmentRequest request, @PathVariable("serviceId") Long serviceId) {
-        Long petId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
-                .getContext().getAuthentication()).getToken().getSubject());
+    @PostMapping(value = "/{serviceId}/{petId}")
+    @PreAuthorize("hasRole('PET_OWNER')")
+    public ApiResponse<AppointmentResponse> createAppointment (@RequestBody @Valid AppointmentRequest request,
+                                                               @PathVariable("serviceId") Long serviceId,
+                                                               @PathVariable("petId") Long petId) {
         return ApiResponse.<AppointmentResponse>builder()
+                .code(1000)
                 .result(appointmentService.createAppointment(request, petId, serviceId))
                 .build();
     }
@@ -41,6 +42,7 @@ public class AppointmentController {
         if ((response.getPet() != null && userId.equals(response.getPet().getId())) ||
                 (response.getService() != null && userId.equals(response.getService().getId()))) {
             return ApiResponse.<AppointmentResponse>builder()
+                    .code(1000)
                     .result(response)
                     .build();
         }

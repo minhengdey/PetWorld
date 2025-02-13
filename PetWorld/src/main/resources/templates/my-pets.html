@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pets - Pet World</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/my-pets.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4c-1.1 0-2 .9-2 2v14a2 2 0 0 0 2 2h2V4h-2Z"/><path d="M4 4c1.1 0 2 .9 2 2v14a2 2 0 0 1-2 2H2V4h2Z"/><path d="M10 4c1.1 0 2 .9 2 2v14a2 2 0 0 1-2 2V4Z"/></svg>
+                <h2>Pet World</h2>
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+            <!-- PET_OWNER Menu -->
+            <div class="menu-section" id="petOwnerMenu">
+                <h4>Pet Owner Menu</h4>
+                <div class="separator"></div>
+                <nav>
+                    <a href="/auth/profile" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/my-pets" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/></svg>
+                        <span>My Pets</span>
+                    </a>
+                    <a href="/auth/switch-to-pet" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        <span>Switch to Pet Role</span>
+                    </a>
+                    <a href="/auth/adopt-pet" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        <span>Adopt a Pet</span>
+                    </a>
+                    <a href="/auth/vet-appointments" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                        <span>Vet Appointments</span>
+                    </a>
+                    <a href="/auth/pet-services" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/></svg>
+                        <span>Pet Care Services</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- PET CENTER Menu -->
+            <div class="menu-section" id="petCenterMenu" style="display: none;">
+                <h4>Pet Center Menu</h4>
+                <div class="separator"></div>
+                <nav>
+                    <a href="/auth/center-profile" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <span>Center Profile</span>
+                    </a>
+                    <a href="/auth/adoption-list" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        <span>Adoption List</span>
+                    </a>
+                    <a href="/auth/adoption-requests" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                        <span>Adoption Requests</span>
+                    </a>
+                    <a href="/auth/center-services" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg>
+                        <span>Services</span>
+                    </a>
+                    <a href="/auth/staff" class="menu-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <span>Staff Management</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="user-profile">
+            <div>
+                <img id="avatar" src="/images/default-avatar.png" alt="Avatar">
+            </div>
+            <div class="user-info">
+                <h3 id="name">Loading...</h3>
+                <p id="role">Loading...</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="content">
+        <div class="content-header">
+            <h1>My Pets</h1>
+            <button id="add-pet-btn" class="add-pet-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add New Pet
+            </button>
+        </div>
+
+        <div class="pets-grid" id="petsContainer">
+            <!-- Pet cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Pet Details Modal -->
+        <div class="modal" id="petDetailsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Pet Details</h2>
+                    <button class="close-modal" id="closePetDetailsModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="pet-details">
+                        <div class="pet-image">
+                            <img id="detailsPetImage" src="" alt="Pet">
+                        </div>
+                        <div class="pet-info">
+                            <h3 id="detailsPetName"></h3>
+                            <p id="detailsPetBreed"></p>
+                            <p id="detailsPetDob"></p>
+                            <p id="detailsPetGender"></p>
+                            <p id="detailsPetWeight"></p>
+                            <p id="detailsPetSpecies"></p>
+                            <p id="is_neutered"></p>
+                            <p id="is_vaccinated"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="switchRoleBtn" class="switch-role-btn">Switch to Pet Role</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchPets();
+        const petsContainer = document.getElementById('petsContainer');
+        const addPetBtn = document.getElementById('add-pet-btn');
+        const addPetModal = document.getElementById('addPetModal');
+        const closeAddPetModal = document.getElementById('closeAddPetModal');
+        const cancelAddPet = document.getElementById('cancelAddPet');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        const petDetailsModal = document.getElementById('petDetailsModal');
+        const closePetDetailsModal = document.getElementById('closePetDetailsModal');
+
+        // Hiển thị modal thêm pet
+        addPetBtn.addEventListener('click', () => {
+            window.location.href = '/add-pet';
+        });
+
+        // Hàm đóng modal thêm pet
+        function closeAddPet() {
+            addPetModal.style.display = 'none';
+            avatarPreview.src = '/images/default-pet.png';
+        }
+        closeAddPetModal.addEventListener('click', closeAddPet);
+        cancelAddPet.addEventListener('click', closeAddPet);
+
+        // Đăng ký sự kiện thay đổi file để preview ảnh
+        document.getElementById('petAvatar').addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    avatarPreview.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Hàm fetch danh sách pets
+        function fetchPets() {
+            fetch('/pet/pets', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 1000) {
+                        renderPets(data.result);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching pets:", error);
+                });
+        }
+
+        // Hàm render danh sách pet vào grid
+        function renderPets(pets) {
+            if (!petsContainer) return;
+            petsContainer.innerHTML = ''; // Xóa nội dung cũ
+            pets.forEach(pet => {
+                const petCard = document.createElement('div');
+                petCard.classList.add('pet-card');
+                petCard.dataset.petId = pet.id;
+
+                // Tạo phần ảnh
+                const petImage = document.createElement('div');
+                petImage.classList.add('pet-image');
+                const img = document.createElement('img');
+                img.src = pet.avatar || '/images/default-pet.png';
+                img.alt = pet.name || 'Unknown Pet';
+                petImage.appendChild(img);
+
+                // Tạo phần thông tin
+                const petInfo = document.createElement('div');
+                petInfo.classList.add('pet-info');
+                const petName = document.createElement('h3');
+                petName.textContent = pet.name || 'No Name';
+                const petBreed = document.createElement('p');
+                petBreed.textContent = pet.breed || 'Unknown Breed';
+                petInfo.appendChild(petName);
+                petInfo.appendChild(petBreed);
+
+                // Ghép các phần lại với nhau
+                petCard.appendChild(petImage);
+                petCard.appendChild(petInfo);
+
+                // Thêm sự kiện click để hiển thị chi tiết pet
+                petCard.addEventListener('click', function() {
+                    showPetDetails(pet);
+                });
+
+                petsContainer.appendChild(petCard);
+            });
+        }
+
+        // Hàm hiển thị modal chi tiết pet
+        function showPetDetails(pet) {
+            document.getElementById('detailsPetImage').src = pet.avatar || '/images/default-pet.png';
+            document.getElementById('detailsPetName').textContent = pet.name || 'No Name';
+            document.getElementById('detailsPetBreed').textContent = "Breed: " + (pet.breed || 'Unknown');
+            document.getElementById('detailsPetDob').textContent = "Date of Birth: " + (pet.dob || 'N/A');
+            document.getElementById('detailsPetGender').textContent = "Gender: " + (pet.gender || 'N/A');
+            document.getElementById('detailsPetWeight').textContent = "Weight: " + (pet.weight ? pet.weight + " kg" : 'N/A');
+            document.getElementById('detailsPetSpecies').textContent = "Species: " + (pet.species || 'N/A');
+            if (pet.isNeutered) {
+                document.getElementById('is_neutered').textContent = "This pet has been neutered/spayed.";
+            } else {
+                document.getElementById('is_neutered').textContent = "This pet has not been neutered/spayed.";
+            }
+
+            if (pet.isVaccinated) {
+                document.getElementById('is_vaccinated').textContent = "This pet has been vaccinated.";
+            } else {
+                document.getElementById('is_vaccinated').textContent = "This pet has not been vaccinated.";
+            }
+
+            // Gán sự kiện click cho nút chuyển role
+            const switchRoleBtn = document.getElementById('switchRoleBtn');
+            switchRoleBtn.onclick = async function(event) {
+                try {
+                    const response = await fetch(`/api/auth/swap/${pet.id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data);
+                        window.location.href = '/home';
+                    } else {
+                        alert('Invalid credentials');
+                    }
+                } catch (error) {
+                    console.error('Login failed:', error);
+                }
+            };
+
+            petDetailsModal.style.display = 'flex';
+
+            closePetDetailsModal.addEventListener('click', function() {
+                petDetailsModal.style.display = 'none';
+            });
+        }
+
+        // Đóng modal nếu click bên ngoài nội dung modal (cho cả 2 modal)
+        window.addEventListener('click', function(e) {
+            if (e.target === addPetModal) {
+                closeAddPet();
+            }
+            if (e.target === petDetailsModal) {
+                petDetailsModal.style.display = 'none';
+            }
+        });
+
+        // Fetch danh sách pets khi load trang
+        fetchPets();
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/auth/myInfo', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 1000) {
+                    document.getElementById('name').textContent = data.result.name || 'Unknown';
+                    document.getElementById('avatar').src = data.result.avatar || '/images/default-avatar.png';
+                    document.getElementById('role').textContent = data.result.role || 'Unknown Role';
+                    const role = data.result.role;
+                    hideAllMenus();
+                    showMenuForRole(role);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+
+        function hideAllMenus() {
+            document.getElementById('petOwnerMenu').style.display = 'none';
+            document.getElementById('petCenterMenu').style.display = 'none';
+        }
+
+        function showMenuForRole(role) {
+            const menuMap = {
+                'PET_OWNER': 'petOwnerMenu',
+                'PET_CENTER': 'petCenterMenu'
+            };
+            const menuId = menuMap[role];
+            if (menuId) {
+                document.getElementById(menuId).style.display = 'block';
+            }
+        }
+    });
+</script>
+
+<!-- Script xử lý preview ảnh khi chọn file -->
+<script>
+    document.getElementById('petAvatar').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var imgElement = document.getElementById('avatarPreview');
+                imgElement.src = event.target.result;
+                imgElement.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+</body>
+</html>

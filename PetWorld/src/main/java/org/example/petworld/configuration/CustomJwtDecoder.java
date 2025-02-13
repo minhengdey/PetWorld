@@ -10,6 +10,7 @@ import org.example.petworld.exception.AppException;
 import org.example.petworld.repository.InvalidatedTokenRepository;
 import org.example.petworld.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -30,10 +31,13 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     public NimbusJwtDecoder nimbusJwtDecoder = null;
 
+    @Value("${signer_key}")
+    String SIGNER_KEY;
+
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
-            JWSVerifier verifier = new MACVerifier(AuthenticationService.SIGNER_KEY);
+            JWSVerifier verifier = new MACVerifier(SIGNER_KEY);
             SignedJWT signedJWT = SignedJWT.parse(token);
             Date expiration = signedJWT.getJWTClaimsSet().getExpirationTime();
             boolean verified = signedJWT.verify(verifier);
@@ -45,7 +49,7 @@ public class CustomJwtDecoder implements JwtDecoder {
             throw new RuntimeException(e);
         }
         if (Objects.isNull(nimbusJwtDecoder)) {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(AuthenticationService.SIGNER_KEY.getBytes(), "HS512");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
             nimbusJwtDecoder = NimbusJwtDecoder
                     .withSecretKey(secretKeySpec)
                     .macAlgorithm(MacAlgorithm.HS512)

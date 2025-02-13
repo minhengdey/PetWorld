@@ -7,8 +7,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Setter
 @Getter
@@ -32,10 +32,20 @@ public class PetEntity extends BaseUserEntity {
     String breed;
 
     @Column(name = "weight")
-    float weight;
+    Float weight;
 
-    @Column(name = "path_profile_image")
-    String pathProfileImage;
+    @Column(name = "is_neutered")
+    Boolean isNeutered;
+
+    @Column(name = "is_vaccinated")
+    Boolean isVaccinated;
+
+    @Column(name = "color")
+    String color;
+
+    @ElementCollection
+    @Column (name = "gallery")
+    Set<String> gallery;
 
     @JsonIgnore
     @ManyToOne
@@ -49,29 +59,17 @@ public class PetEntity extends BaseUserEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<AppointmentEntity> appointments = new TreeSet<>();
+    Set<AppointmentEntity> appointments = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<AdoptionEntity> adoptions = new TreeSet<>();
+    Set<AdoptionEntity> adoptions = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "pet1", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<FriendshipEntity> friendRequestSent = new TreeSet<>();
+    Set<FriendshipEntity> friendRequestSent = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "pet2", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<FriendshipEntity> friendRequest = new TreeSet<>();
-
-    @Column(name = "created_at")
-    Date createdAt;
-
-    @Column(name = "deleted_at")
-    Date deletedAt;
-
-    @Column(name = "is_deleted")
-    boolean isDeleted;
-
-    @Column(name = "updated_at")
-    Date updatedAt;
+    Set<FriendshipEntity> friendRequest = new HashSet<>();
 }

@@ -35,4 +35,6 @@ public class PetCenterResponse {
     boolean isDeleted;
 
     Set<PetEntity> petsAvailable;
+
+    String avatar;
 }

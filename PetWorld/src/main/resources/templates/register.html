@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet World | Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .registration-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-text {
+            color: #6482AD;
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-header h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6482AD;
+            box-shadow: 0 0 0 2px rgba(100, 130, 173, 0.2);
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 30px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            background-color: #6482AD;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .file-input-label:hover {
+            background-color: #526a8e;
+        }
+
+        .file-input-icon {
+            margin-right: 8px;
+        }
+
+        .preview-container {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #6482AD;
+            padding: 3px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px;
+            background-color: #6482AD;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #526a8e;
+        }
+    </style>
+</head>
+<body>
+<div class="registration-container">
+    <div class="form-header">
+        <h2 class="logo-text">🐈 Pet World</h2>
+        <h2>Create Account</h2>
+        <p>Join our community of pet lovers</p>
+    </div>
+
+    <form id="register-form" th:action="@{/auth/process-register}" th:object="${userCreation}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" th:field="*{name}" class="form-input" placeholder="Enter your name" required />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" th:field="*{email}" class="form-input" placeholder="Enter your email" required />
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" th:field="*{phone}" class="form-input" placeholder="Enter your phone number" required />
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" th:field="*{address}" class="form-input" placeholder="Enter your address" required />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" class="form-input" placeholder="Create a password" required />
+        </div>
+
+        <div class="form-group">
+            <label for="role">I am a</label>
+            <select id="role" th:field="*{role}" class="form-input" required>
+                <option value="PET_OWNER">Pet Owner</option>
+                <option value="PET_CENTER">Pet Adoption Center</option>
+                <option value="PET_CARE_SERVICES">Pet Care Service Provider</option>
+            </select>
+        </div>
+
+        <input type="hidden" id="avatarUrl" th:field="*{avatar}" name="avatarUrl">
+
+        <div class="form-group">
+            <label for="avatar">Profile Picture</label>
+            <div class="preview-container">
+                <img id="avatarPreview" src="/images/default-avatar.png" alt="Avatar Preview">
+            </div>
+            <div class="file-input-wrapper">
+                <input type="file" id="avatar" name="file" class="file-input" accept="image/*">
+                <label for="avatar">
+                    <i class="fas fa-upload file-input-icon"></i>
+                    <span>Choose file</span>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-button">Create Account</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('avatar').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var imgElement = document.getElementById('avatarPreview');
+                imgElement.src = event.target.result;
+                imgElement.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+<script>
+    document.getElementById('register-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Ngăn chặn reload trang
+
+        var fileInput = document.getElementById('avatar');
+        var file = fileInput.files[0];
+
+        if (!file) {
+            alert("Please select a file to upload.");
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const avatarUrl = responseData.result;
+
+                var avatarUrlInput = document.getElementById('avatarUrl');
+                if (!avatarUrlInput) {
+                    console.error("Input hidden avatarUrl không tồn tại!");
+                    return;
+                }
+
+                avatarUrlInput.value = avatarUrl; // Lưu URL ảnh vào input hidden
+
+                // 🚨 **Thiếu đoạn này**: Submit form sau khi cập nhật avatar thành công
+                event.target.submit();
+            } else {
+                alert('File upload failed');
+            }
+        } catch (error) {
+            console.error('Upload failed:', error);
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package org.example.petworld.dto.response;
 
+import jakarta.persistence.Column;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.petworld.entity.ServiceEntity;
@@ -32,4 +33,6 @@ public class PetCareServicesResponse {
     Set<ServiceEntity> services;
 
     Date updatedAt;
+
+    String avatar;
 }

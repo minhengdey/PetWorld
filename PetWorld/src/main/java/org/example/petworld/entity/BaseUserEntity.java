@@ -28,6 +28,9 @@ public class BaseUserEntity {
     @Column(name = "role")
     String role;
 
+    @Column(name = "avatar")
+    String avatar;
+
     @Column(name = "created_at")
     Date createdAt;
 
@@ -35,7 +38,7 @@ public class BaseUserEntity {
     Date deletedAt;
 
     @Column(name = "is_deleted")
-    boolean isDeleted;
+    Boolean isDeleted;
 
     @Column(name = "updated_at")
     Date updatedAt;

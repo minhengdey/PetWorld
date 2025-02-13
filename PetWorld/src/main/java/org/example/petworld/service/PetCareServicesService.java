@@ -28,15 +28,12 @@ public class PetCareServicesService {
 
     public UserResponse createProfile(Object request) {
         if (request instanceof UserCreationRequest) {
-            if (petCareServicesRepository.existsByEmailAndIsDeleted(((UserCreationRequest) request).getEmail(), false)) {
-                throw new AppException(ErrorCode.USER_EXISTED);
-            }
             PetCareServicesEntity service = petCareServicesMapper
                     .toServiceEntity((UserCreationRequest) request);
             service.setPassword(passwordEncoder.encode(service.getPassword()));
             service.setRole(Role.PET_CARE_SERVICES.name());
             service.setCreatedAt(new Date());
-            service.setDeleted(false);
+            service.setIsDeleted(false);
             return petCareServicesMapper.toUserResponse(petCareServicesRepository.save(service));
         } else {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
@@ -71,7 +68,7 @@ public class PetCareServicesService {
         PetCareServicesEntity petCareServices = petCareServicesRepository
                 .findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        petCareServices.setDeleted(true);
+        petCareServices.setIsDeleted(true);
         petCareServices.setDeletedAt(new Date());
         petCareServicesRepository.save(petCareServices);
     }

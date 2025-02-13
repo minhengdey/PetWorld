@@ -31,4 +31,6 @@ public class UserResponse {
     boolean isDeleted;
 
     Date updatedAt;
+
+    String avatar;
 }

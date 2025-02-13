@@ -8,6 +8,7 @@ import org.example.petworld.dto.response.PetResponse;
 import org.example.petworld.entity.PetCenterEntity;
 import org.example.petworld.entity.PetEntity;
 import org.example.petworld.entity.PetOwnerEntity;
+import org.example.petworld.entity.UsersEntity;
 import org.example.petworld.enums.ErrorCode;
 import org.example.petworld.enums.Role;
 import org.example.petworld.exception.AppException;
@@ -15,9 +16,12 @@ import org.example.petworld.mapper.PetMapper;
 import org.example.petworld.repository.PetCenterRepository;
 import org.example.petworld.repository.PetOwnerRepository;
 import org.example.petworld.repository.PetRepository;
+import org.example.petworld.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +44,7 @@ public class PetService {
         PetEntity pet = petMapper.toPetEntity(request);
         pet.setPetOwner(petOwner);
         pet.setCreatedAt(new Date());
-        pet.setDeleted(false);
+        pet.setIsDeleted(false);
         pet.setRole(Role.PET.name());
         petOwner.getPets().add(pet);
         return petMapper.toPetResponse(petRepository.save(pet));
@@ -58,7 +62,7 @@ public class PetService {
         PetEntity pet = petMapper.toPetEntity(request);
         pet.setPetCenter(petCenter);
         pet.setCreatedAt(new Date());
-        pet.setDeleted(false);
+        pet.setIsDeleted(false);
         petCenter.getPetsAvailable().add(pet);
         return petMapper.toPetResponse(petRepository.save(pet));
     }
@@ -68,6 +72,22 @@ public class PetService {
                 .findByIdAndIsDeleted(id, false)
                 .orElseThrow(() ->
                         new AppException(ErrorCode.PET_NOT_FOUND)));
+    }
+
+    public Set<PetResponse> getAllPetByPetOwnerId(Long userId) {
+        PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() ->
+                        new AppException(ErrorCode.USER_NOT_FOUND));
+        Set<PetEntity> pets = petOwner.getPets();
+        return pets.stream().map(petMapper::toPetResponse).collect(Collectors.toSet());
+    }
+
+    public Set<PetResponse> getAllByPetCenterId(Long userId) {
+        PetCenterEntity petCenter = petCenterRepository.findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() ->
+                        new AppException(ErrorCode.USER_NOT_FOUND));
+        Set<PetEntity> pets = petCenter.getPetsAvailable();
+        return pets.stream().map(petMapper::toPetResponse).collect(Collectors.toSet());
     }
 
     public PetResponse updatePetForPetOwner(PetRequest request, Long id, Long petOwnerId) {
@@ -115,7 +135,7 @@ public class PetService {
         PetEntity pet = petRepository
                 .findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND));
-        pet.setDeleted(true);
+        pet.setIsDeleted(true);
         pet.setDeletedAt(new Date());
         petRepository.save(pet);
     }

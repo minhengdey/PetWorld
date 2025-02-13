@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @PreAuthorize("hasRole('PET_OWNER') or hasRole('PET_CENTER') or hasRole('PET')")
 @RestController
 @RequestMapping(value = "/pet")
@@ -32,12 +34,15 @@ public class PetController {
         System.out.println(role);
         Long userId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
                 .getContext().getAuthentication()).getToken().getSubject());
+        System.out.println(userId);
         if (role.equals("[ROLE_PET_OWNER]")) {
             return ApiResponse.<PetResponse>builder()
+                    .code(1000)
                     .result(petService.createForPetOwner(request, userId))
                     .build();
         } else if (role.equals("[ROLE_PET_CENTER]")) {
             return ApiResponse.<PetResponse>builder()
+                    .code(1000)
                     .result(petService.createForPetCenter(request, userId))
                     .build();
         }
@@ -58,9 +63,30 @@ public class PetController {
                         role.equals("[ROLE_PET_CENTER]"))) {
             return ApiResponse.<PetResponse>builder()
                     .result(response)
+                    .code(1000)
                     .build();
         }
         throw new AppException(ErrorCode.UNAUTHENTICATED);
+    }
+
+    @GetMapping(value = "/pets")
+    @PostMapping("hasRole('PET_OWNER') or hasRole('PET_CENTER')")
+    public ApiResponse<Set<PetResponse>> getAllByUserId () {
+        String role = String.valueOf(SecurityContextHolder.getContext()
+                .getAuthentication().getAuthorities());
+        Long userId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
+                .getContext().getAuthentication()).getToken().getSubject());
+        if (role.equals("[ROLE_PET_OWNER]")) {
+            return ApiResponse.<Set<PetResponse>>builder()
+                    .code(1000)
+                    .result(petService.getAllPetByPetOwnerId(userId))
+                    .build();
+        } else {
+            return ApiResponse.<Set<PetResponse>>builder()
+                    .code(1000)
+                    .result(petService.getAllByPetCenterId(userId))
+                    .build();
+        }
     }
 
     @PutMapping(value = "/{id}")
@@ -73,12 +99,15 @@ public class PetController {
                 .getContext().getAuthentication()).getToken().getSubject());
         return switch (role) {
             case "[ROLE_PET_OWNER]" -> ApiResponse.<PetResponse>builder()
+                    .code(1000)
                     .result(petService.updatePetForPetOwner(request, id, userId))
                     .build();
             case "[ROLE_PET_CENTER]" -> ApiResponse.<PetResponse>builder()
+                    .code(1000)
                     .result(petService.updatePetForPetCenter(request, id, userId))
                     .build();
             case "[ROLE_PET]" -> ApiResponse.<PetResponse>builder()
+                    .code(1000)
                     .result(petService.updatePetForPet(request, id))
                     .build();
             default -> throw new AppException(ErrorCode.UNAUTHENTICATED);

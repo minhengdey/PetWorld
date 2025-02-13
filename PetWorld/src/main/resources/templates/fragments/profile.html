@@ -1,0 +1,10 @@
+<div th:fragment="profile">
+    <h2 class="content-header">My Profile</h2>
+    <p>Welcome, <span th:text="${#authentication.name}">User</span>!</p>
+    <div class="profile-info">
+        <p><strong>Email:</strong> <span th:text="${#authentication.principal.email}">user@example.com</span></p>
+        <p><strong>Role:</strong> <span th:text="${#authentication.principal.role}">Pet Owner</span></p>
+    </div>
+    <button class="nav-button" style="width: auto; margin-top: 20px;">Edit Profile</button>
+</div>
+

@@ -7,6 +7,7 @@ import org.example.petworld.dto.request.PetOwnerRequest;
 import org.example.petworld.dto.request.UserCreationRequest;
 import org.example.petworld.dto.response.PetOwnerResponse;
 import org.example.petworld.dto.response.UserResponse;
+import org.example.petworld.entity.PetEntity;
 import org.example.petworld.entity.PetOwnerEntity;
 import org.example.petworld.enums.ErrorCode;
 import org.example.petworld.enums.Role;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +31,6 @@ public class PetOwnerService {
 
     public PetOwnerResponse update(Object request, Long id) {
         if (request instanceof PetOwnerRequest) {
-            if (petOwnerRepository.existsByEmailAndIsDeleted(((PetOwnerRequest) request).getEmail(), false)) {
-                throw new AppException(ErrorCode.USER_EXISTED);
-            }
             PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(id, false)
                     .orElseThrow(() ->
                             new AppException(ErrorCode.USER_NOT_FOUND));
@@ -53,7 +53,7 @@ public class PetOwnerService {
         PetOwnerEntity petOwner = petOwnerRepository
                 .findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        petOwner.setDeleted(true);
+        petOwner.setIsDeleted(true);
         petOwner.setDeletedAt(new Date());
         petOwnerRepository.save(petOwner);
     }
@@ -67,7 +67,7 @@ public class PetOwnerService {
             petOwner.setPassword(passwordEncoder.encode(petOwner.getPassword()));
             petOwner.setRole(Role.PET_OWNER.name());
             petOwner.setCreatedAt(new Date());
-            petOwner.setDeleted(false);
+            petOwner.setIsDeleted(false);
             return petOwnerMapper.toUserResponse(petOwnerRepository.save(petOwner));
         } else {
             throw new AppException(ErrorCode.UNAUTHENTICATED);

@@ -5,7 +5,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 
-
+@Getter
+@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +23,13 @@ public class PetRequest {
 
     String breed;
 
-    float weight;
+    Float weight;
 
-    String pathProfileImage;
+    String avatar;
+
+    Boolean isNeutered;
+
+    Boolean isVaccinated;
+
+    String color;
 }
