@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,13 +24,10 @@ public class ServiceEntity {
     String name;
 
     @Column(name = "price")
-    int price;
+    Integer price;
 
     @Column(name = "used_count")
-    int usedCount;
-
-    @Column(name = "rating")
-    float rating;
+    Integer usedCount;
 
     @Column(name = "discount")
     String discount;
@@ -41,16 +39,15 @@ public class ServiceEntity {
     Date deletedAt;
 
     @Column(name = "is_deleted")
-    boolean isDeleted;
+    Boolean isDeleted;
 
     @Column(name = "updated_at")
     Date updatedAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<AppointmentEntity> appointments = new TreeSet<>();
+    Set<AppointmentEntity> appointments = new HashSet<>();
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "pet_care_services_id")
     PetCareServicesEntity petCareServices;

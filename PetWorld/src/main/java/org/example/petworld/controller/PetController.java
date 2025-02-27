@@ -69,7 +69,7 @@ public class PetController {
         throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
 
-    @GetMapping(value = "/pets")
+    @GetMapping(value = "/my-pets")
     @PostMapping("hasRole('PET_OWNER') or hasRole('PET_CENTER')")
     public ApiResponse<Set<PetResponse>> getAllByUserId () {
         String role = String.valueOf(SecurityContextHolder.getContext()
@@ -87,6 +87,25 @@ public class PetController {
                     .result(petService.getAllByPetCenterId(userId))
                     .build();
         }
+    }
+
+    @GetMapping(value = "/pets-pc")
+    public ApiResponse<Set<PetResponse>> getAllPetForPC () {
+        return ApiResponse.<Set<PetResponse>>builder()
+                .code(1000)
+                .result(petService.getAllPetForPC())
+                .build();
+    }
+
+    @PreAuthorize("hasRole('PET')")
+    @GetMapping(value = "/friend-suggestions")
+    public ApiResponse<Set<PetResponse>> getFriendSuggestions () {
+        Long petId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
+                .getContext().getAuthentication()).getToken().getSubject());
+        return ApiResponse.<Set<PetResponse>>builder()
+                .code(1000)
+                .result(petService.getFriendSuggestions(petId))
+                .build();
     }
 
     @PutMapping(value = "/{id}")

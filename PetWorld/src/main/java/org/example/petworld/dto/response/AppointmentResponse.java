@@ -13,7 +13,13 @@ import java.util.Date;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppointmentResponse {
+    Long id;
+
     String status;
+
+    Date preferredDateTime;
+
+    String specialNotes;
 
     Date createdAt;
 
@@ -21,7 +27,7 @@ public class AppointmentResponse {
 
     Date updatedAt;
 
-    boolean isDeleted;
+    Boolean isDeleted;
 
     PetEntity pet;
 

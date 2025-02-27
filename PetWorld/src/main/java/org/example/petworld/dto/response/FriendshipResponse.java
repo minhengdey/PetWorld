@@ -12,17 +12,19 @@ import java.util.Date;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FriendshipResponse {
+    Long id;
+
     PetEntity pet1;
 
     PetEntity pet2;
 
-    boolean isAccepted;
+    Boolean isAccepted;
 
     Date createdAt;
 
     Date deletedAt;
 
-    boolean isDeleted;
+    Boolean isDeleted;
 
     Date updatedAt;
 }

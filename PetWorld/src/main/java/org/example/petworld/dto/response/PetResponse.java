@@ -35,7 +35,13 @@ public class PetResponse {
 
     Boolean isVaccinated;
 
+    Boolean isAdopted;
+
+    Date adoptedAt;
+
     String color;
+
+    Set<String> gallery;
 
     PetOwnerEntity petOwner;
 
@@ -43,7 +49,7 @@ public class PetResponse {
 
     Set<AppointmentEntity> appointments;
 
-    Set<AdoptionEntity> adoptions;
+    AdoptionEntity adoption;
 
     Set<FriendshipEntity> friendRequestSent;
 

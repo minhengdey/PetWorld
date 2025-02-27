@@ -5,8 +5,9 @@ import org.example.petworld.dto.response.PetResponse;
 import org.example.petworld.entity.PetEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PetMapper {
     PetEntity toPetEntity (PetRequest request);
     PetResponse toPetResponse (PetEntity pet);

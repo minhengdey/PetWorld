@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Service</title>
+    <link rel="stylesheet" href="/css/add-service.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Add New Service</h1>
+    <form id="addServiceForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="serviceName">Name</label>
+            <input type="text" id="serviceName" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="servicePrice">Price</label>
+            <input type="number" id="servicePrice" name="price" required>
+        </div>
+
+        <div class="form-group">
+            <label for="serviceDiscount">Discount</label>
+            <input type="text" id="serviceDiscount" name="discount" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="submit-btn" id="submitAddService">Add Service</button>
+            <button type="button" class="cancel-btn" id="cancelAddService">Cancel</button>
+        </div>
+    </form>
+</div>
+<script src="/js/add-service.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+.verify-content {
+    text-align: center;
+}
+
+.verify-text {
+    color: var(--muted);
+    margin-bottom: 2rem;
+}
+
+.otp-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.otp-input {
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    font-size: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--background);
+}
+
+.otp-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.resend-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.resend-link:hover {
+    text-decoration: underline;
+}

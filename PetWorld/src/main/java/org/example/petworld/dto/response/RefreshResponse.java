@@ -10,5 +10,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshResponse {
     String token;
-    boolean success;
+    Boolean success;
 }

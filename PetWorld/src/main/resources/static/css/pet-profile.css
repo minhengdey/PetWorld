@@ -1,0 +1,210 @@
+.pet-profile {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.profile-header {
+    position: relative;
+    height: 300px;
+    background-color: #e5deff;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+}
+
+.profile-cover {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 6px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    object-fit: cover;
+    z-index: 1;
+}
+
+.profile-actions {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+}
+
+.edit-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: white;
+    border: none;
+    border-radius: 8px;
+    color: #333;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+}
+
+.profile-content {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.main-info {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.pet-name {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.pet-badges {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: #e5deff;
+    color: #7E69AB;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.badge .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-card .material-symbols-outlined {
+    font-size: 24px;
+    color: #9b87f5;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-content label {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.info-content span {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.gallery-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-section h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.gallery-item {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-header {
+        height: 250px;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+    }
+
+    .pet-name {
+        font-size: 2rem;
+    }
+
+    .profile-actions {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}

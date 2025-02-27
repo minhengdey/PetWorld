@@ -17,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +65,12 @@ public class PetCareServicesService {
                 .findByIdAndIsDeleted(id, false)
                 .orElseThrow(() ->
                         new AppException(ErrorCode.USER_NOT_FOUND)));
+    }
+
+    public Set<PetCareServicesResponse> getAll() {
+        return petCareServicesRepository.findAllByIsDeleted(false).stream()
+                .map(petCareServicesMapper::toPetCareServicesResponse)
+                .collect(Collectors.toSet());
     }
 
     public void deleteById(Long id) {

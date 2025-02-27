@@ -20,7 +20,7 @@ body {
 }
 
 .layout {
-    display: flex;
+    display: block;
     min-height: 100vh;
 }
 
@@ -148,6 +148,33 @@ body {
 .content p {
     color: #6b7280;
     line-height: 1.5;
+}
+
+/* Logout button styles */
+.logout-button {
+    margin: 0 1rem 1rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: #f8f9fa;
+    color: #e53935;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.logout-button:hover {
+    background-color: #fee8e8;
+    border-color: #ffcdd2;
+}
+
+.logout-button svg {
+    width: 20px;
+    height: 20px;
 }
 
 /* Responsive Design */

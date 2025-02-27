@@ -5,8 +5,9 @@ import org.example.petworld.dto.response.AppointmentResponse;
 import org.example.petworld.entity.AppointmentEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AppointmentMapper {
     AppointmentEntity toEntity (AppointmentRequest request);
     AppointmentResponse toResponse (AppointmentEntity appointmentEntity);

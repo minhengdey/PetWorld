@@ -34,7 +34,7 @@ public class PetOwnerResponse {
 
     Date updatedAt;
 
-    boolean isDeleted;
+    Boolean isDeleted;
 
     Set<PetEntity> pets;
 

@@ -23,14 +23,44 @@ public class AdoptionEntity {
     String status;
 
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "pet_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "pet_id", unique = true)
     PetEntity pet;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "pet_owner_id", nullable = false)
     PetOwnerEntity petOwner;
+
+    @Column(name = "adoption_date")
+    Date adoptionDate;
+
+    @Column(name = "next_meeting_date")
+    Date nextMeetingDate;
+
+    @Column(name = "has_owned_pets_before")
+    Boolean hasOwnedPetsBefore;
+
+    @Column(name = "pet_experience")
+    String petExperience;
+
+    @Column(name = "residence_type")
+    String residenceType;      // Loại hình nhà ở (Chung cư, Nhà riêng, v.v.)
+
+    @Column(name = "has_yard")
+    Boolean hasYard;           // Có sân hay không? (true/false)
+
+    @Column(name = "has_fenced_area")
+    Boolean hasFencedArea;      // Có khu vực rào chắn không? (true/false)
+
+    @Column(name = "has_other_pets")
+    Boolean hasOtherPets;       // Đang nuôi thú cưng khác không? (true/false)
+
+    @Column(name = "other_pets_details")
+    String otherPetsDetails;    // Mô tả về thú cưng hiện tại (nếu có)
+
+    @Column(name = "adoption_reason")
+    String adoptionReason;      // Lý do muốn nhận nuôi
 
     @Column(name = "created_at")
     Date createdAt;
@@ -39,7 +69,7 @@ public class AdoptionEntity {
     Date deletedAt;
 
     @Column(name = "is_deleted")
-    boolean isDeleted;
+    Boolean isDeleted;
 
     @Column(name = "updated_at")
     Date updatedAt;

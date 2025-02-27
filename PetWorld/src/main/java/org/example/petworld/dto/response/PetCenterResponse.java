@@ -14,6 +14,8 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PetCenterResponse {
+    Long id;
+
     String name;
 
     String email;
@@ -26,15 +28,15 @@ public class PetCenterResponse {
 
     String description;
 
+    Set<PetEntity> petsAvailable;
+
+    String avatar;
+
     Date createdAt;
 
     Date deletedAt;
 
     Date updatedAt;
 
-    boolean isDeleted;
-
-    Set<PetEntity> petsAvailable;
-
-    String avatar;
+    Boolean isDeleted;
 }

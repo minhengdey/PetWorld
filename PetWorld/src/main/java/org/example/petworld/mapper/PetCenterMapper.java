@@ -11,8 +11,9 @@ import org.example.petworld.entity.PetOwnerEntity;
 import org.example.petworld.entity.UsersEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PetCenterMapper {
     PetCenterEntity toPetCenterEntity (UserCreationRequest request);
     PetCenterEntity toPetCenterEntity (UsersEntity users);

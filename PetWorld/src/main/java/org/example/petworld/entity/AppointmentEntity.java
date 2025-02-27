@@ -22,6 +22,12 @@ public class AppointmentEntity {
     @Column(name = "status")
     String status;
 
+    @Column(name = "preferred-datetime")
+    Date preferredDateTime;
+
+    @Column(name = "special-notes")
+    String specialNotes;
+
     @Column(name = "created_at")
     Date createdAt;
 
@@ -32,14 +38,12 @@ public class AppointmentEntity {
     Date deletedAt;
 
     @Column(name = "is_deleted")
-    boolean isDeleted;
+    Boolean isDeleted;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "pet_id", nullable = false)
     PetEntity pet;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
     ServiceEntity service;

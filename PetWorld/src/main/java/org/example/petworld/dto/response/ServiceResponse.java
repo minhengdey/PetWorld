@@ -14,13 +14,13 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceResponse {
+    Long id;
+
     String name;
 
-    int price;
+    Integer price;
 
-    int usedCount;
-
-    float rating;
+    Integer usedCount;
 
     String discount;
 
@@ -28,7 +28,7 @@ public class ServiceResponse {
 
     Date deletedAt;
 
-    boolean isDeleted;
+    Boolean isDeleted;
 
     Date updatedAt;
 

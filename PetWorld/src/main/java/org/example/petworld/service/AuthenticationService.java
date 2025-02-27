@@ -65,7 +65,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         boolean authenticated;
-        UsersEntity users = usersRepository.findByEmailAndIsDeleted(request.getEmail(), false)
+        UsersEntity users = usersRepository.findByEmailAndRoleAndIsDeleted(request.getEmail(), request.getRole(), false)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         authenticated = passwordEncoder.matches(request.getPassword(), users.getPassword());
         if (!authenticated) {
@@ -105,6 +105,17 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .authenticated(true)
                 .token(generateToken(pet))
+                .build();
+    }
+
+    public AuthenticationResponse swichToPetOwner() {
+        Long petId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
+                .getContext().getAuthentication()).getToken().getSubject());
+        PetEntity pet = petRepository.findByIdAndIsDeleted(petId, false)
+                .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND));
+        return AuthenticationResponse.builder()
+                .authenticated(true)
+                .token(generateToken(pet.getPetOwner()))
                 .build();
     }
 

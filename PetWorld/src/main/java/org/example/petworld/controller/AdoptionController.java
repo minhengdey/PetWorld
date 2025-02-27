@@ -1,5 +1,6 @@
 package org.example.petworld.controller;
 
+import com.cloudinary.Api;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/adoption")
@@ -47,18 +51,23 @@ public class AdoptionController {
         throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
 
-    @PutMapping(value = "/{id}")
-    public ApiResponse<AdoptionResponse> updateAdoption (@RequestBody @Valid AdoptionRequest request, @PathVariable("id") Long id) {
+    @GetMapping(value = "/all-requests")
+    public ApiResponse<List<AdoptionResponse>> getAllAdoptionRequests () {
         Long userId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
                 .getContext().getAuthentication()).getToken().getSubject());
-        AdoptionResponse response = adoptionService.getAdoption(id);
-        if ((response.getPet() != null && userId.equals(response.getPet().getId())) ||
-                (response.getPetOwner() != null && userId.equals(response.getPetOwner().getId()))) {
-            return ApiResponse.<AdoptionResponse>builder()
-                    .result(adoptionService.updateAdoption(request, id))
-                    .build();
-        }
-        throw new AppException(ErrorCode.UNAUTHENTICATED);
+        return ApiResponse.<List<AdoptionResponse>>builder()
+                .code(1000)
+                .result(adoptionService.getAllAdoptionRequests(userId))
+                .build();
+    }
+
+
+    @PutMapping(value = "/{id}")
+    public ApiResponse<AdoptionResponse> updateAdoption (@RequestBody @Valid AdoptionRequest request, @PathVariable("id") Long id) {
+        return ApiResponse.<AdoptionResponse>builder()
+                .code(1000)
+                .result(adoptionService.updateAdoption(request, id))
+                .build();
     }
 
     @DeleteMapping(value = "/{id}")

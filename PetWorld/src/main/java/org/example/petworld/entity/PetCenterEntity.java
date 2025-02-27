@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,5 +22,5 @@ public class PetCenterEntity extends UsersEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "petCenter", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<PetEntity> petsAvailable = new TreeSet<>();
+    Set<PetEntity> petsAvailable = new HashSet<>();
 }

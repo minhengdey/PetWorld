@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,4 +33,6 @@ public class PetRequest {
     Boolean isVaccinated;
 
     String color;
+
+    Set<String> gallery;
 }

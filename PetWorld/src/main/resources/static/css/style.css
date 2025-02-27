@@ -58,7 +58,7 @@ img {
 }
 section .section-title {
     text-align: center;
-    padding: 60px 0 100px;
+    padding: 100px 0 100px;
     text-transform: uppercase;
     font-size: var(--font-size-xl);
 }

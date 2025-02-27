@@ -5,8 +5,9 @@ import org.example.petworld.dto.response.ServiceResponse;
 import org.example.petworld.entity.ServiceEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ServiceMapper {
     ServiceEntity toEntity (ServiceRequest request);
     ServiceResponse toResponse (ServiceEntity service);

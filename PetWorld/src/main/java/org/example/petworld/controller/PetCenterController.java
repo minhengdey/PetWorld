@@ -24,6 +24,7 @@ public class PetCenterController {
     @PutMapping(value = "/{id}")
     public ApiResponse<PetCenterResponse> update (@RequestBody @Valid PetCenterRequest request, @PathVariable Long id) {
         return ApiResponse.<PetCenterResponse>builder()
+                .code(1000)
                 .result(petCenterService.update(request, id))
                 .build();
     }
@@ -32,6 +33,7 @@ public class PetCenterController {
     @GetMapping(value = "/{id}")
     public ApiResponse<PetCenterResponse> findUserById (@PathVariable Long id) {
         return ApiResponse.<PetCenterResponse>builder()
+                .code(1000)
                 .result(petCenterService.getById(id))
                 .build();
     }

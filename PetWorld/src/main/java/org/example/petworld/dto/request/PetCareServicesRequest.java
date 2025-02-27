@@ -27,4 +27,6 @@ public class PetCareServicesRequest {
     String description;
 
     String avatar;
+
+    String role;
 }

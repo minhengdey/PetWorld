@@ -13,13 +13,12 @@ import org.example.petworld.enums.ErrorCode;
 import org.example.petworld.enums.Role;
 import org.example.petworld.exception.AppException;
 import org.example.petworld.mapper.PetMapper;
-import org.example.petworld.repository.PetCenterRepository;
-import org.example.petworld.repository.PetOwnerRepository;
-import org.example.petworld.repository.PetRepository;
-import org.example.petworld.repository.UsersRepository;
+import org.example.petworld.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,6 +30,7 @@ public class PetService {
     PetMapper petMapper;
     PetOwnerRepository petOwnerRepository;
     PetCenterRepository petCenterRepository;
+    FriendshipRepository friendshipRepository;
 
     public PetResponse createForPetOwner(PetRequest request, Long petOwnerId) {
         PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(petOwnerId, false)
@@ -63,6 +63,7 @@ public class PetService {
         pet.setPetCenter(petCenter);
         pet.setCreatedAt(new Date());
         pet.setIsDeleted(false);
+        pet.setIsAdopted(false);
         petCenter.getPetsAvailable().add(pet);
         return petMapper.toPetResponse(petRepository.save(pet));
     }
@@ -79,7 +80,13 @@ public class PetService {
                 .orElseThrow(() ->
                         new AppException(ErrorCode.USER_NOT_FOUND));
         Set<PetEntity> pets = petOwner.getPets();
-        return pets.stream().map(petMapper::toPetResponse).collect(Collectors.toSet());
+        Set<PetResponse> petResponses = new HashSet<>();
+        for (PetEntity pet : pets) {
+            if (!pet.getIsDeleted()) {
+                petResponses.add(petMapper.toPetResponse(pet));
+            }
+        }
+        return petResponses;
     }
 
     public Set<PetResponse> getAllByPetCenterId(Long userId) {
@@ -87,7 +94,37 @@ public class PetService {
                 .orElseThrow(() ->
                         new AppException(ErrorCode.USER_NOT_FOUND));
         Set<PetEntity> pets = petCenter.getPetsAvailable();
-        return pets.stream().map(petMapper::toPetResponse).collect(Collectors.toSet());
+        Set<PetResponse> petResponses = new HashSet<>();
+        for (PetEntity pet : pets) {
+            if (!pet.getIsDeleted()) {
+                petResponses.add(petMapper.toPetResponse(pet));
+            }
+        }
+        return petResponses;
+    }
+
+    public Set<PetResponse> getAllPetForPC() {
+        List<PetEntity> petEntities = petRepository.findAll();
+        Set<PetResponse> pets = new HashSet<>();
+        for (PetEntity pet : petEntities) {
+            if (!pet.getIsDeleted() && pet.getPetCenter() != null && pet.getAdoption() == null) {
+                pets.add(petMapper.toPetResponse(pet));
+            }
+        }
+        return pets;
+    }
+
+    public Set<PetResponse> getFriendSuggestions(Long petId) {
+        List<PetEntity> petEntities = petRepository.findAll();
+        Set<PetResponse> pets = new HashSet<>();
+        for (PetEntity pet : petEntities) {
+            if (!pet.getIsDeleted() && pet.getPetOwner() != null && !pet.getId().equals(petId) &&
+                    !friendshipRepository.existsByPet1IdAndPet2IdAndIsDeleted(petId, pet.getId(), false) &&
+                            !friendshipRepository.existsByPet1IdAndPet2IdAndIsDeleted(pet.getId(), petId, false)) {
+                pets.add(petMapper.toPetResponse(pet));
+            }
+        }
+        return pets;
     }
 
     public PetResponse updatePetForPetOwner(PetRequest request, Long id, Long petOwnerId) {

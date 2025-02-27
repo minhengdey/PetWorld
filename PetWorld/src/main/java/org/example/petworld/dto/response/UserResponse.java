@@ -28,7 +28,7 @@ public class UserResponse {
 
     Date deletedAt;
 
-    boolean isDeleted;
+    Boolean isDeleted;
 
     Date updatedAt;
 

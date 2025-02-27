@@ -11,11 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class ServiceRequest {
     String name;
 
-    int price;
-
-    int usedCount;
-
-    float rating;
+    Integer price;
 
     String discount;
 }

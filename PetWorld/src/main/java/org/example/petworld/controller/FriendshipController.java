@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @PreAuthorize("hasRole('PET')")
 @RestController
 @RequestMapping(value = "/friendship")
@@ -38,12 +40,31 @@ public class FriendshipController {
                 .build();
     }
 
-    @PutMapping(value = "/{pet2Id}")
-    public ApiResponse<FriendshipResponse> updateFriendship (@RequestBody @Valid FriendshipRequest request, @PathVariable("pet2Id") Long pet2Id) {
-        Long pet1Id = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
+    @GetMapping(value = "/friend-requests")
+    public ApiResponse<Set<FriendshipResponse>> getFriendRequests () {
+        Long petId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
                 .getContext().getAuthentication()).getToken().getSubject());
+        System.out.println(petId);
+        return ApiResponse.<Set<FriendshipResponse>>builder()
+                .code(1000)
+                .result(friendshipService.getFriendRequests(petId))
+                .build();
+    }
+
+    @GetMapping(value = "/friends")
+    public ApiResponse<Set<FriendshipResponse>> getFriends () {
+        Long petId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
+                .getContext().getAuthentication()).getToken().getSubject());
+        return ApiResponse.<Set<FriendshipResponse>>builder()
+                .code(1000)
+                .result(friendshipService.getFriends(petId))
+                .build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ApiResponse<FriendshipResponse> updateFriendship (@RequestBody @Valid FriendshipRequest request, @PathVariable("id") Long id) {
         return ApiResponse.<FriendshipResponse>builder()
-                .result(friendshipService.updateFriendship(request, pet1Id, pet2Id))
+                .result(friendshipService.updateFriendship(request, id))
                 .build();
     }
 

@@ -31,7 +31,7 @@ public class FriendshipEntity {
     PetEntity pet2;
 
     @Column(name = "is_accepted")
-    boolean isAccepted;
+    Boolean isAccepted;
 
     @Column(name = "created_at")
     Date createdAt;
@@ -40,7 +40,7 @@ public class FriendshipEntity {
     Date deletedAt;
 
     @Column(name = "is_deleted")
-    boolean isDeleted;
+    Boolean isDeleted;
 
     @Column(name = "updated_at")
     Date updatedAt;

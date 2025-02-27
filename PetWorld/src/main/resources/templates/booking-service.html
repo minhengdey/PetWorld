@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Service - Pet World</title>
+    <link rel="stylesheet" href="/css/booking-service.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="form-header">
+        <button onclick="history.back()" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back
+        </button>
+        <h1>Book Service</h1>
+    </div>
+    <div class="service-summary">
+        <h2>Service Details</h2>
+        <div class="summary-details" id="service-details">
+
+        </div>
+    </div>
+    <form id="bookingForm">
+        <div class="form-group">
+            <label for="datetime">Date Time:</label>
+            <input type="datetime-local" id="datetime" name="datetime">
+        </div>
+        <div class="pet-selection">
+            <label>Select Pet</label>
+            <div class="pet-grid" id="petsContainer">
+
+            </div>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="notes">Special Notes</label>
+            <textarea id="notes" name="notes" placeholder="Any special requirements or concerns..."></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="submit-btn">Book Appointment</button>
+            <button type="button" class="cancel-btn" onclick="history.back()">Cancel</button>
+        </div>
+    </form>
+</div>
+<script src="/js/booking-service.js"></script>
+</body>
+</html>

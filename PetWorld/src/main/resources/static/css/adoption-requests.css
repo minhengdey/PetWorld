@@ -1,0 +1,326 @@
+.adoption-requests {
+    padding: 24px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.page-header h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+}
+.header-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: white;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #666;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.stat-pill .material-symbols-outlined {
+    font-size: 20px;
+}
+.requests-filters {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: white;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.search-box input {
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    width: 100%;
+}
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.filter-btn:hover {
+    background-color: #f8f9fa;
+}
+.filter-btn.active {
+    background-color: #9b87f5;
+    border-color: #9b87f5;
+    color: white;
+}
+.requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.request-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.requester-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.requester-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.requester-details h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+.request-date {
+    font-size: 0.85rem;
+    color: #666;
+}
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+.status-badge.pending {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+.status-badge.approved {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+.status-badge.rejected {
+    background-color: #ffebee;
+    color: #c62828;
+}
+.pet-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.pet-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+.pet-details h4 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    color: #333;
+}
+.pet-breed {
+    font-size: 0.9rem;
+    color: #666;
+}
+.request-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+.detail-item .material-symbols-outlined {
+    color: #9b87f5;
+}
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.detail-content label {
+    font-size: 0.85rem;
+    color: #666;
+}
+.detail-content span {
+    font-size: 0.95rem;
+    color: #333;
+}
+.request-message {
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.request-message p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.5;
+}
+.request-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.action-btn.approve {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+.action-btn.approve:hover {
+    background-color: #c8e6c9;
+}
+.action-btn.reject {
+    background-color: #ffebee;
+    color: #c62828;
+}
+.action-btn.reject:hover {
+    background-color: #ffcdd2;
+}
+.action-btn.view {
+    background-color: #f5f5f5;
+    color: #666;
+}
+.action-btn.view:hover {
+    background-color: #e0e0e0;
+}
+.other-pets-info {
+
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.other-pets-info h4,
+
+.request-message h4 {
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.other-pets-info p {
+
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.amenities {
+
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.tag {
+
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    background-color: #e9ecef;
+    border-radius: 12px;
+    color: #666;
+}
+
+.request-date br {
+
+    content: '';
+    display: block;
+    margin: 4px 0;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .adoption-requests {
+        padding: 16px;
+    }
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .requests-filters {
+        flex-direction: column;
+    }
+    .search-box {
+        width: 100%;
+    }
+    .filter-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .request-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .status-badge {
+        align-self: flex-start;
+    }
+    .request-actions {
+        justify-content: stretch;
+    }
+    .action-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

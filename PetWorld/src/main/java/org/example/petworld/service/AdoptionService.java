@@ -16,7 +16,7 @@ import org.example.petworld.repository.PetOwnerRepository;
 import org.example.petworld.repository.PetRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +36,9 @@ public class AdoptionService {
         adoption.setPet(pet);
         adoption.setPetOwner(petOwner);
         adoption.setCreatedAt(new Date());
-        adoption.setDeleted(false);
-        pet.getAdoptions().add(adoption);
+        adoption.setIsDeleted(false);
+        adoption.setStatus("Pending");
+        pet.setAdoption(adoption);
         petOwner.getAdoptions().add(adoption);
         return adoptionMapper.toResponse(adoptionRepository.save(adoption));
     }
@@ -47,11 +48,29 @@ public class AdoptionService {
                 new AppException(ErrorCode.ADOPTION_NOT_FOUND)));
     }
 
+    public List<AdoptionResponse> getAllAdoptionRequests(Long userId) {
+        List<AdoptionEntity> list = adoptionRepository.findAll();
+        List<AdoptionResponse> adoptionResponses = new ArrayList<>();
+        for (AdoptionEntity adoption : list) {
+            if (adoption.getPetOwner().getId().equals(userId) || adoption.getPet().getPetCenter().getId().equals(userId)) {
+                adoptionResponses.add(adoptionMapper.toResponse(adoption));
+            }
+        }
+        adoptionResponses.sort(Comparator
+                .comparing(AdoptionResponse::getNextMeetingDate,
+                        Comparator.nullsLast(Comparator.naturalOrder())));
+        return adoptionResponses;
+    }
+
     public AdoptionResponse updateAdoption(AdoptionRequest request, Long id) {
         AdoptionEntity adoption = adoptionRepository.findByIdAndIsDeleted(id, false).orElseThrow(() ->
                 new AppException(ErrorCode.ADOPTION_NOT_FOUND));
         adoptionMapper.update(adoption, request);
         adoption.setUpdatedAt(new Date());
+        if (adoption.getStatus().equals("Approved")) {
+            adoption.getPet().setIsAdopted(true);
+            adoption.setAdoptionDate(new Date());
+        }
         return adoptionMapper.toResponse(adoptionRepository.save(adoption));
     }
 
@@ -59,7 +78,7 @@ public class AdoptionService {
         AdoptionEntity adoption = adoptionRepository.findByIdAndIsDeleted(id, false).orElseThrow(() ->
                 new AppException(ErrorCode.ADOPTION_NOT_FOUND));
         adoption.setDeletedAt(new Date());
-        adoption.setDeleted(true);
+        adoption.setIsDeleted(true);
         adoptionRepository.save(adoption);
     }
 }

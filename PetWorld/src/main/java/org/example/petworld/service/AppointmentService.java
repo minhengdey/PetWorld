@@ -16,7 +16,7 @@ import org.example.petworld.repository.PetRepository;
 import org.example.petworld.repository.ServiceRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,14 +27,16 @@ public class AppointmentService {
     PetRepository petRepository;
     ServiceRepository serviceRepository;
 
-    public AppointmentResponse createAppointment(AppointmentRequest request, Long petId, Long serviceId) {
+    public AppointmentResponse createAppointment(AppointmentRequest request, Long serviceId) {
         ServiceEntity service = serviceRepository.findByIdAndIsDeleted(serviceId, false)
                 .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
-        PetEntity pet = petRepository.findByIdAndIsDeleted(petId, false)
+        PetEntity pet = petRepository.findByIdAndIsDeleted(request.getIdPet(), false)
                 .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND));
         AppointmentEntity appointment = appointmentMapper.toEntity(request);
+        service.setUsedCount(service.getUsedCount() + 1);
+        appointment.setStatus("Pending");
         appointment.setCreatedAt(new Date());
-        appointment.setDeleted(false);
+        appointment.setIsDeleted(false);
         appointment.setPet(pet);
         appointment.setService(service);
         service.getAppointments().add(appointment);
@@ -49,6 +51,41 @@ public class AppointmentService {
                         new AppException(ErrorCode.APPOINTMENT_NOT_FOUND)));
     }
 
+    public List<AppointmentResponse> getAllByPetOwnerId(Long petOwnerId) {
+        List<AppointmentResponse> appointments = new ArrayList<>();
+        List<AppointmentEntity> listAppointments = appointmentRepository.findAll();
+        for (AppointmentEntity appointment : listAppointments) {
+            if (!appointment.getIsDeleted() && appointment.getPet().getPetOwner().getId().equals(petOwnerId)) {
+                appointments.add(appointmentMapper.toResponse(appointment));
+            }
+        }
+        appointments.sort(new Comparator<AppointmentResponse>() {
+            @Override
+            public int compare(AppointmentResponse o1, AppointmentResponse o2) {
+                return o1.getPreferredDateTime().compareTo(o2.getPreferredDateTime());
+            }
+        });
+        return appointments;
+    }
+
+    public List<AppointmentResponse> getAllByPetCareServicesId(Long petCareServicesId) {
+        List<AppointmentResponse> appointments = new ArrayList<>();
+        List<AppointmentEntity> listAppointments = appointmentRepository.findAll();
+        for (AppointmentEntity appointment : listAppointments) {
+            if (!appointment.getIsDeleted() && !appointment.getStatus().equals("Rejected") &&
+                    appointment.getService().getPetCareServices().getId().equals(petCareServicesId)) {
+                appointments.add(appointmentMapper.toResponse(appointment));
+            }
+        }
+        appointments.sort(new Comparator<AppointmentResponse>() {
+            @Override
+            public int compare(AppointmentResponse o1, AppointmentResponse o2) {
+                return o1.getPreferredDateTime().compareTo(o2.getPreferredDateTime());
+            }
+        });
+        return appointments;
+    }
+
     public AppointmentResponse updateAppointment(AppointmentRequest request, Long id) {
         AppointmentEntity appointment = appointmentRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_FOUND));
@@ -61,7 +98,7 @@ public class AppointmentService {
         AppointmentEntity appointment = appointmentRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_FOUND));
         appointment.setDeletedAt(new Date());
-        appointment.setDeleted(true);
+        appointment.setIsDeleted(true);
         appointmentRepository.save(appointment);
     }
 }

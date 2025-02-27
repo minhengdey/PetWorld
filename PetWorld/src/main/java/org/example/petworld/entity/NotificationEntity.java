@@ -27,7 +27,7 @@ public class NotificationEntity {
     String path;
 
     @Column(name = "is_read")
-    boolean isRead;
+    Boolean isRead;
 
     @Column(name = "created_at")
     Date createdAt;
@@ -36,7 +36,7 @@ public class NotificationEntity {
     Date deletedAt;
 
     @Column(name = "is_deleted")
-    boolean isDeleted;
+    Boolean isDeleted;
 
     @Column(name = "updated_at")
     Date updatedAt;

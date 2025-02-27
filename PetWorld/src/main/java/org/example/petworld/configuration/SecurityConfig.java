@@ -1,5 +1,6 @@
 package org.example.petworld.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +25,12 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class SecurityConfig {
 
     @Autowired
@@ -39,25 +42,31 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/myInfo").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/show-register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/log-in").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                        .anyRequest().authenticated());
-
-        httpSecurity.addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class);
-
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(request ->
-                        new CorsConfiguration().applyPermitDefaultValues()));
-        ;
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
+//                                .requestMatchers(HttpMethod.GET, "/api/auth/myInfo").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/auth/show-register").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/auth/log-in").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/").permitAll()
+                                .requestMatchers("/css/**", "/js/**", "/images/**", "/placeholder.svg").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf(AbstractHttpConfigurer::disable)  // ✅ Vẫn cần tắt CSRF nếu dùng cookie JWT
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:3000")); // ✅ Thay domain frontend
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                    config.setAllowCredentials(true); // ✅ Quan trọng: Cho phép gửi cookie
+                    log.info("JwtCookieFilter triggered for: {}", request.getRequestURI());
+                    return config;
+                }));
 
         return httpSecurity.build();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -72,18 +81,4 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     };
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")  // Áp dụng cho tất cả API
-                        .allowedOrigins("http://localhost:63342")  // Cho phép frontend truy cập
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")  // Các phương thức HTTP
-                        .allowCredentials(true); // Cho phép gửi cookie/token
-            }
-        };
-    }
-
 }

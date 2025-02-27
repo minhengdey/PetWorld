@@ -1,0 +1,184 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    margin-left: 280px;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    background: white;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e4e6eb;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1c1e21;
+}
+.search-box {
+    flex: 1;
+    max-width: 300px;
+    position: relative;
+}
+.search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid #e4e6eb;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    background-color: #f0f2f5;
+}
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #65676b;
+}
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+.friends-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Tăng min-width */
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.friend-card {
+    background: white;
+    border-radius: 12px; /* Bo góc hơn chút */
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%; /* Đảm bảo card full kích thước */
+}
+.friend-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.friend-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.friend-info {
+    padding: 12px;
+}
+.friend-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: #1c1e21;
+}
+.friend-breed {
+    font-size: 0.9rem;
+    color: #65676b;
+    margin-bottom: 12px;
+}
+.friend-actions {
+    display: flex;
+    gap: 8px;
+}
+.action-button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+.message-btn {
+    background-color: #e4e6eb;
+    color: #050505;
+}
+.message-btn:hover {
+    background-color: #d8dadf;
+}
+.unfriend-btn {
+    background-color: #ff4d4d;
+    color: white;
+}
+.unfriend-btn:hover {
+    background-color: #ff3333;
+}
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #65676b;
+}
+.loading i {
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+.error {
+    text-align: center;
+    padding: 40px;
+    color: #ff4d4d;
+}
+.no-friends {
+    text-align: center;
+    padding: 40px;
+    color: #65676b;
+}
+.no-friends i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+@media (max-width: 768px) {
+    .friends-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    .friend-image {
+        height: 160px;
+    }
+    .header-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-box {
+        max-width: none;
+    }
+}

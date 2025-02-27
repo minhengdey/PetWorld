@@ -5,8 +5,9 @@ import org.example.petworld.dto.response.FriendshipResponse;
 import org.example.petworld.entity.FriendshipEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface FriendshipMapper {
     FriendshipEntity toEntity (FriendshipRequest request);
     FriendshipResponse toResponse (FriendshipEntity friendship);

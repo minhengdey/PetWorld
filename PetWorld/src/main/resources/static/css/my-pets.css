@@ -154,6 +154,32 @@
     line-height: 1.5;
 }
 
+.pet-gallery-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pet-gallery {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pet-gallery img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.pet-gallery img:hover {
+    transform: scale(1.1);
+}
+
 .modal-actions {
     display: flex;
     gap: 1rem;

@@ -40,6 +40,12 @@ public class PetEntity extends BaseUserEntity {
     @Column(name = "is_vaccinated")
     Boolean isVaccinated;
 
+    @Column(name = "is_adopted")
+    Boolean isAdopted;
+
+    @Column(name = "adopted_at")
+    Date adoptedAt;
+
     @Column(name = "color")
     String color;
 
@@ -47,12 +53,10 @@ public class PetEntity extends BaseUserEntity {
     @Column (name = "gallery")
     Set<String> gallery;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "pet_owner_id")
     PetOwnerEntity petOwner;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "center_id")
     PetCenterEntity petCenter;
@@ -62,8 +66,8 @@ public class PetEntity extends BaseUserEntity {
     Set<AppointmentEntity> appointments = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<AdoptionEntity> adoptions = new HashSet<>();
+    @OneToOne(mappedBy = "pet", cascade = CascadeType.ALL)
+    AdoptionEntity adoption;
 
     @JsonIgnore
     @OneToMany(mappedBy = "pet1", cascade = CascadeType.ALL, orphanRemoval = true)
