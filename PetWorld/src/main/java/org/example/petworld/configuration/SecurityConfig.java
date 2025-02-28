@@ -36,30 +36,28 @@ public class SecurityConfig {
     @Autowired
     private JwtCookieFilter jwtCookieFilter;
 
-    private final String[] PUBLIC_ENDPOINT ={"/user", "/auth/log-in",
+    private final String[] PUBLIC_ENDPOINT_POST = {"/user", "/auth/log-in",
             "/auth/process-register", "/auth/log-out", "/auth/refresh",
             "/auth/addNewProfile/**", "/api/auth/log-in", "/api/upload"};
+    private final String[] PUBLIC_ENDPOINT_GET = {"/auth/show-register", "/auth/log-in", "/"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
-//                                .requestMatchers(HttpMethod.GET, "/api/auth/myInfo").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/auth/show-register").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/auth/log-in").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/").permitAll()
-                                .requestMatchers("/css/**", "/js/**", "/images/**", "/placeholder.svg").permitAll()
+                        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT_POST).permitAll()
+                                .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINT_GET).permitAll()
+                                .requestMatchers("/css/**", "/js/**", "/images/**", "/placeholder.svg", "/ws/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf(AbstractHttpConfigurer::disable)  // ✅ Vẫn cần tắt CSRF nếu dùng cookie JWT
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:3000")); // ✅ Thay domain frontend
+                    config.setAllowedOrigins(List.of("http://localhost:3000"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                    config.setAllowCredentials(true); // ✅ Quan trọng: Cho phép gửi cookie
+                    config.setAllowCredentials(true);
                     log.info("JwtCookieFilter triggered for: {}", request.getRequestURI());
                     return config;
                 }));

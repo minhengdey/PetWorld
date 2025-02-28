@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.petworld.dto.request.AppointmentRequest;
+import org.example.petworld.dto.request.NotificationRequest;
 import org.example.petworld.dto.response.AppointmentResponse;
 import org.example.petworld.entity.AppointmentEntity;
 import org.example.petworld.entity.PetEntity;
@@ -26,6 +27,7 @@ public class AppointmentService {
     AppointmentMapper appointmentMapper;
     PetRepository petRepository;
     ServiceRepository serviceRepository;
+    NotificationService notificationService;
 
     public AppointmentResponse createAppointment(AppointmentRequest request, Long serviceId) {
         ServiceEntity service = serviceRepository.findByIdAndIsDeleted(serviceId, false)
@@ -41,6 +43,12 @@ public class AppointmentService {
         appointment.setService(service);
         service.getAppointments().add(appointment);
         pet.getAppointments().add(appointment);
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .user(service.getPetCareServices())
+                .message(pet.getName() + " has requested to use your service: " + service.getName() + ".")
+                .path("http://localhost:8080/appointments-management")
+                .build();
+        notificationService.sendNotification(notificationRequest);
         return appointmentMapper
                 .toResponse(appointmentRepository.save(appointment));
     }
@@ -91,6 +99,12 @@ public class AppointmentService {
                 .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_FOUND));
         appointmentMapper.update(appointment, request);
         appointment.setUpdatedAt(new Date());
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .user(appointment.getPet().getPetOwner())
+                .message("The appointment for your pet " + appointment.getPet().getName() + " has been updated.")
+                .path("http://localhost:8080/appointments")
+                .build();
+        notificationService.sendNotification(notificationRequest);
         return appointmentMapper.toResponse(appointmentRepository.save(appointment));
     }
 

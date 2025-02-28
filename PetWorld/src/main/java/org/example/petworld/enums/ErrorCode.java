@@ -32,7 +32,8 @@ public enum ErrorCode {
     PERMISSION_EXISTED(1018, "Permission existed", HttpStatus.BAD_REQUEST),
     PERMISSION_NOT_FOUND(1019, "Permission not found", HttpStatus.NOT_FOUND),
     FILE_UPLOAD_ERROR(1020, "Cannot upload file", HttpStatus.BAD_REQUEST),
-    COOKIE_NOT_FOUND(1021, "Cannot find cookie", HttpStatus.NOT_FOUND);
+    COOKIE_NOT_FOUND(1021, "Cannot find cookie", HttpStatus.NOT_FOUND),
+    NOTIFICATION_NOT_FOUND(1022, "Cannot find notification", HttpStatus.NOT_FOUND);
 
     int code;
     String message;

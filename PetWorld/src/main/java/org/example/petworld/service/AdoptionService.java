@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.petworld.dto.request.AdoptionRequest;
+import org.example.petworld.dto.request.NotificationRequest;
 import org.example.petworld.dto.response.AdoptionResponse;
 import org.example.petworld.entity.AdoptionEntity;
+import org.example.petworld.entity.NotificationEntity;
 import org.example.petworld.entity.PetEntity;
 import org.example.petworld.entity.PetOwnerEntity;
 import org.example.petworld.enums.ErrorCode;
@@ -26,6 +28,7 @@ public class AdoptionService {
     AdoptionMapper adoptionMapper;
     PetOwnerRepository petOwnerRepository;
     PetRepository petRepository;
+    NotificationService notificationService;
 
     public AdoptionResponse createAdoption(AdoptionRequest request, Long petOwnerId, Long petId) {
         PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(petOwnerId, false).orElseThrow(() ->
@@ -40,6 +43,12 @@ public class AdoptionService {
         adoption.setStatus("Pending");
         pet.setAdoption(adoption);
         petOwner.getAdoptions().add(adoption);
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .user(pet.getPetCenter())
+                .message(petOwner.getName() + " has requested to adopt " + pet.getName() + ".")
+                .path("http://localhost:8080/adoption-requests")
+                .build();
+        notificationService.sendNotification(notificationRequest);
         return adoptionMapper.toResponse(adoptionRepository.save(adoption));
     }
 
@@ -70,6 +79,14 @@ public class AdoptionService {
         if (adoption.getStatus().equals("Approved")) {
             adoption.getPet().setIsAdopted(true);
             adoption.setAdoptionDate(new Date());
+        }
+        if (adoption.getStatus().equals("Approved") || adoption.getStatus().equals("Rejected")) {
+            NotificationRequest notificationRequest = NotificationRequest.builder()
+                    .user(adoption.getPetOwner())
+                    .message("Your request to adopt " + adoption.getPet().getName() + " has been " + adoption.getStatus().toLowerCase() + ".")
+                    .path("http://localhost:8080/adopt-pets")
+                    .build();
+            notificationService.sendNotification(notificationRequest);
         }
         return adoptionMapper.toResponse(adoptionRepository.save(adoption));
     }

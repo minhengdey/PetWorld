@@ -177,6 +177,104 @@ body {
     height: 20px;
 }
 
+/* Notification styles */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+.notification-bell {
+    position: relative;
+    cursor: pointer;
+    padding: 10px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.notification-count {
+    display: flex;
+    position: absolute;
+    top: -5px;
+    right: 0;
+    background: #e53935;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    min-width: 15px; /* Đảm bảo đủ rộng để hiển thị số */
+    height: 18px; /* Đảm bảo đủ cao để không bị mất số */
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    white-space: nowrap; /* Tránh xuống dòng */
+}
+.notifications-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 320px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-top: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+}
+.notifications-dropdown.show {
+    display: block;
+}
+.notification-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+.notification-item.unread {
+    background-color: #f0f7ff;
+}
+.notification-title {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.notification-message {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+.notification-date {
+    color: #999;
+    font-size: 0.8em;
+}
+.mark-all-read {
+    color: #2196f3;
+    cursor: pointer;
+    font-size: 0.9em;
+    background: none;
+    border: none;
+    padding: 5px 10px;
+}
+.mark-all-read:hover {
+    text-decoration: underline;
+}
+.no-notifications {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {

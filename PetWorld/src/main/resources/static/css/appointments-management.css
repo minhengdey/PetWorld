@@ -26,7 +26,7 @@
 .search-box {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     background-color: white;
     padding: 8px 16px;
     border-radius: 8px;
@@ -43,24 +43,6 @@
 
 .search-box svg {
     color: #666;
-}
-
-.new-bill-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #9b87f5;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.new-bill-btn:hover {
-    background-color: #8B5CF6;
 }
 
 .bills-container {

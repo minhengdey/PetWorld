@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.petworld.dto.request.FriendshipRequest;
+import org.example.petworld.dto.request.NotificationRequest;
 import org.example.petworld.dto.response.FriendshipResponse;
 import org.example.petworld.dto.response.PetResponse;
 import org.example.petworld.entity.FriendshipEntity;
@@ -29,6 +30,7 @@ public class FriendshipService {
     FriendshipRepository friendshipRepository;
     FriendshipMapper friendshipMapper;
     PetRepository petRepository;
+    NotificationService notificationService;
 
     public FriendshipResponse createFriendship(Long pet1Id, Long pet2Id) {
         if (pet1Id.equals(pet2Id) || friendshipRepository
@@ -49,6 +51,12 @@ public class FriendshipService {
         friendship.setIsAccepted(false);
         pet1.getFriendRequestSent().add(friendship);
         pet2.getFriendRequest().add(friendship);
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .user(pet2)
+                .message(pet1.getName() + " has sent you a friend request.")
+                .path("http://localhost:8080/friend-requests")
+                .build();
+        notificationService.sendNotification(notificationRequest);
         return friendshipMapper.toResponse(friendshipRepository.save(friendship));
     }
 
@@ -60,6 +68,13 @@ public class FriendshipService {
         if (!friendship.getIsAccepted()) {
             friendship.setIsDeleted(true);
             friendship.setDeletedAt(new Date());
+        } else {
+            NotificationRequest notificationRequest = NotificationRequest.builder()
+                    .user(friendship.getPet1())
+                    .message(friendship.getPet2().getName() + " has accepted your friend request.")
+                    .path("http://localhost:8080/friends")
+                    .build();
+            notificationService.sendNotification(notificationRequest);
         }
         friendship.setUpdatedAt(new Date());
         return friendshipMapper.toResponse(friendshipRepository.save(friendship));

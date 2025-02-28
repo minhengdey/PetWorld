@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@Table(name = "notification")
+@Table(name = "notifications")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationEntity {
     @Id
@@ -21,7 +21,7 @@ public class NotificationEntity {
     Long id;
 
     @Column(name = "content")
-    String content;
+    String message;
 
     @Column(name = "path")
     String path;
@@ -43,11 +43,6 @@ public class NotificationEntity {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "sender_id", nullable = false)
-    BaseUserEntity sender;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "receiver_id", nullable = false)
-    BaseUserEntity receiver;
+    @JoinColumn(name = "user_id", nullable = false)
+    BaseUserEntity user;
 }
