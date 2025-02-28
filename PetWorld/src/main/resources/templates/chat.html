@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body>
+<div class="chat-container">
+    <!-- Friends list sidebar -->
+    <div class="friends-list">
+        <div class="friends-header">
+            <h2>Friends</h2>
+        </div>
+        <div class="friends-search">
+            <input type="text" placeholder="Search friends...">
+        </div>
+        <div id="friends-container">
+            <!-- Friends will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="chat-area">
+        <div class="chat-header">
+            <div class="chat-user-info">
+                <img id="current-chat-avatar" src="/placeholder.svg?height=40&width=40" alt="User avatar">
+                <h3 id="current-chat-name">Select a friend</h3>
+            </div>
+        </div>
+        <div id="messages-container" class="messages-container">
+            <!-- Messages will be loaded here -->
+            <div class="empty-chat-message">Select a friend to start chatting</div>
+        </div>
+        <div class="message-input-container">
+            <input type="text" id="message-input" placeholder="Type a message..." disabled>
+            <button id="send-button" disabled>Send</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="/js/chat.js"></script>
+</body>
+</html>
+

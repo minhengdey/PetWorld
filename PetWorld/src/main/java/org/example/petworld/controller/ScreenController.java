@@ -162,4 +162,9 @@ public class ScreenController {
     public String adoptionRequests () {
         return "adoption-requests";
     }
+
+    @GetMapping(value = "/chat")
+    public String chat () {
+        return "chat";
+    }
 }

@@ -9,27 +9,31 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 
-
 @Entity
 @Setter
 @Getter
-@Table(name = "friendship")
+@Table(name = "message")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FriendshipEntity {
+public class MessageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "pet1_id")
-    PetEntity pet1;
+    @Column(name = "content")
+    String content;
 
-    @ManyToOne
-    @JoinColumn(name = "pet2_id")
-    PetEntity pet2;
+    @Column(name = "is_read")
+    Boolean isRead;
 
-    @Column(name = "is_accepted")
-    Boolean isAccepted;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
+    BaseUserEntity sender;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", nullable = false)
+    BaseUserEntity receiver;
 
     @Column(name = "created_at")
     Date createdAt;
@@ -42,4 +46,5 @@ public class FriendshipEntity {
 
     @Column(name = "updated_at")
     Date updatedAt;
+
 }
