@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @PreAuthorize("hasRole('PET')")
@@ -52,10 +53,10 @@ public class FriendshipController {
     }
 
     @GetMapping(value = "/friends")
-    public ApiResponse<Set<FriendshipResponse>> getFriends () {
+    public ApiResponse<List<FriendshipResponse>> getFriends () {
         Long petId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
                 .getContext().getAuthentication()).getToken().getSubject());
-        return ApiResponse.<Set<FriendshipResponse>>builder()
+        return ApiResponse.<List<FriendshipResponse>>builder()
                 .code(1000)
                 .result(friendshipService.getFriends(petId))
                 .build();

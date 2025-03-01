@@ -15,8 +15,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
         });
 
         if (response.ok) {
-            const data = await response.json();
-            window.location.href = '/home'; // Chuyển hướng sau khi đăng nhập
+            window.location.href = '/home';
         } else {
             alert('Invalid credentials');
         }

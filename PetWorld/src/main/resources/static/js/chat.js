@@ -230,6 +230,12 @@ messageInput.addEventListener("keypress", (e) => {
     }
 })
 
+const backButton = document.getElementById("back-button")
+
+backButton.addEventListener("click", () => {
+    window.location.href = '/home'
+})
+
 // Initialize the app
 function initApp() {
     loadFriends()

@@ -30,7 +30,7 @@ public class MessageService {
         messageEntity.setIsDeleted(false);
         messagingTemplate.convertAndSendToUser(
                 request.getSender().getId().toString(),
-                "/topic/messages",
+                "/queue/messages",
                 messageMapper.toResponse(messageRepository.save(messageEntity))
         );
 

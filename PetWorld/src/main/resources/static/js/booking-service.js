@@ -1,11 +1,6 @@
-function getServiceIdFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id');
-}
-
 // Sau đó gọi API để lấy dữ liệu chi tiết
 async function fetchServiceDetails() {
-    const serviceId = getServiceIdFromUrl();
+    const serviceId = sessionStorage.getItem('selectedServiceId');
     if (!serviceId) {
         console.error('Service ID not found in URL');
         return;
@@ -111,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
             idPet: petId,
             specialNotes: document.getElementById('notes').value
         }
-        const serviceId = getServiceIdFromUrl();
+        const serviceId = sessionStorage.getItem('selectedServiceId');
         const response = await fetch(`/appointment/${serviceId}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},

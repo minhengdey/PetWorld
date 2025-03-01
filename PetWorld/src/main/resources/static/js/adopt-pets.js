@@ -103,7 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (pet.adoption === null) {
             document.getElementById('adoptPetBtn').onclick = () => {
-                window.location.href = `http://localhost:8080/adoption-form?id=${pet.id}`;
+                sessionStorage.setItem('selectedPetId', pet.id);
+                window.location.href = '/adoption-form';
             };
         }
 

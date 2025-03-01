@@ -27,7 +27,7 @@ public class PetOwnerController {
 
     @PostAuthorize("#id.toString() == authentication.token.claims['sub']")
     @PutMapping(value = "/{id}")
-    public ApiResponse<PetOwnerResponse> update (@RequestBody @Valid PetOwnerRequest request, @PathVariable Long id) {
+    public ApiResponse<PetOwnerResponse> update (@RequestBody @Valid PetOwnerRequest request, @PathVariable("id") Long id) {
         return ApiResponse.<PetOwnerResponse>builder()
                 .result(petOwnerService.update(request, id))
                 .code(1000)

@@ -37,7 +37,7 @@ public class SecurityConfig {
     private JwtCookieFilter jwtCookieFilter;
 
     private final String[] PUBLIC_ENDPOINT_POST = {"/user", "/auth/log-in",
-            "/auth/process-register", "/auth/log-out", "/auth/refresh",
+            "/api/auth/register", "/auth/log-out", "/auth/refresh",
             "/auth/addNewProfile/**", "/api/auth/log-in", "/api/upload"};
     private final String[] PUBLIC_ENDPOINT_GET = {"/auth/show-register", "/auth/log-in", "/"};
 

@@ -91,16 +91,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hàm hiển thị modal chi tiết service
     function showServiceDetails(service) {
+        console.log(service)
         document.getElementById('detailsServiceName').textContent = service.name;
         document.getElementById('detailsServicePrice').textContent = `$${service.price.toFixed(2)}`;
         document.getElementById('detailsServiceDiscount').textContent = service.discount ? `${service.discount}% OFF` : '';
-        document.getElementById('detailsServiceDuration').querySelector('span:last-child').textContent = `${service.duration} minutes`;
         document.getElementById('detailsServiceDescription').textContent = service.description;
 
         serviceDetailsModal.style.display = 'flex';
 
         // Set up action buttons
-        document.getElementById('bookingBtn').onclick = () => window.location.href = `http://localhost:8080/booking-service?id=${service.id}`;
+        sessionStorage.setItem('selectedServiceId', service.id);
+        document.getElementById('bookingBtn').onclick = () => window.location.href = '/booking-service';
     }
 
     // Close modal

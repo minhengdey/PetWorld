@@ -11,9 +11,11 @@ import lombok.experimental.FieldDefaults;
 import org.example.petworld.dto.request.AuthenticationRequest;
 import org.example.petworld.dto.request.LogoutRequest;
 import org.example.petworld.dto.request.RefreshRequest;
+import org.example.petworld.dto.request.UserCreationRequest;
 import org.example.petworld.dto.response.ApiResponse;
 import org.example.petworld.dto.response.AuthenticationResponse;
 import org.example.petworld.dto.response.RefreshResponse;
+import org.example.petworld.dto.response.UserResponse;
 import org.example.petworld.enums.ErrorCode;
 import org.example.petworld.exception.AppException;
 import org.example.petworld.service.AuthenticationService;
@@ -31,6 +33,14 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
     AuthenticationService authenticationService;
+
+    @PostMapping(value = "/register")
+    public ApiResponse<UserResponse> register (@RequestBody UserCreationRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .code(1000)
+                .result(authenticationService.register(request))
+                .build();
+    }
 
     @PostMapping(value = "/log-in")
     public ApiResponse<AuthenticationResponse> authenticate (@RequestBody @Valid AuthenticationRequest request, HttpServletResponse response) {

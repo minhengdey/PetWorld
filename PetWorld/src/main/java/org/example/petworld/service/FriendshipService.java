@@ -18,10 +18,7 @@ import org.example.petworld.repository.PetRepository;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -92,9 +89,9 @@ public class FriendshipService {
         }
     }
 
-    public Set<FriendshipResponse> getFriends(Long petId) {
+    public List<FriendshipResponse> getFriends(Long petId) {
         List<FriendshipEntity> list = friendshipRepository.findAllByIsDeletedAndIsAccepted(false, true);
-        Set<FriendshipResponse> friendshipResponses = new HashSet<>();
+        List<FriendshipResponse> friendshipResponses = new ArrayList<>();
         for (FriendshipEntity friendship : list) {
             if (friendship.getPet1().getId().equals(petId) || friendship.getPet2().getId().equals(petId)) {
                 friendshipResponses.add(friendshipMapper.toResponse(friendship));

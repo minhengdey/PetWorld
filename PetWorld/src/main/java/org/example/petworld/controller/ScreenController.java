@@ -1,49 +1,23 @@
 package org.example.petworld.controller;
 
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.example.petworld.dto.request.*;
-import org.example.petworld.dto.response.PetResponse;
-import org.example.petworld.dto.response.ServiceResponse;
-import org.example.petworld.entity.ServiceEntity;
-import org.example.petworld.service.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ScreenController {
-    AuthenticationService authenticationService;
-    ServiceService serviceService;
-    PetService petService;
 
     @GetMapping(value = "/auth/show-register")
-    public String register (Model model) {
-        model.addAttribute("userCreation", new UserCreationRequest());
+    public String register () {
         return "register";
     }
 
-    @PostMapping(value = "/auth/process-register")
-    public String handleRegister (@Valid @ModelAttribute("userCreation") UserCreationRequest request,
-                            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "register";
-        }
-        authenticationService.register(request);
-        System.out.println(request.getAvatar());
-        redirectAttributes.addAttribute("message", "Đăng ký thành công");
-        return "redirect:/auth/log-in";
-    }
-
     @GetMapping(value = "/auth/log-in")
-    public String login (Model model) {
-        model.addAttribute("user", new AuthenticationRequest());
+    public String login () {
         return "log-in";
     }
 
@@ -98,21 +72,22 @@ public class ScreenController {
     }
 
     @GetMapping(value = "/pet-owner/edit-profile")
-    public String editProfile (Model model) {
-        model.addAttribute("userUpdate", new PetOwnerRequest());
+    public String editProfile () {
         return "edit-profile-pet-owner";
     }
 
     @GetMapping(value = "/pet-care-services/edit-profile")
-    public String editProfilePCS (Model model) {
-        model.addAttribute("userUpdate", new PetCareServicesRequest());
+    public String editProfilePCS () {
         return "edit-profile-pet-care-services";
     }
 
+    @GetMapping(value = "/pet-center/edit-profile")
+    public String editProfilePC () {
+        return "edit-profile-pet-center";
+    }
+
     @GetMapping("/booking-service")
-    public String getServiceDetails(@RequestParam("id") Long id, Model model) {
-        ServiceResponse service = serviceService.getService(id);
-        model.addAttribute("service", service);
+    public String getServiceDetails() {
         return "booking-service";
     }
 
@@ -152,9 +127,7 @@ public class ScreenController {
     }
 
     @GetMapping(value = "/adoption-form")
-    public String adoptionForm (@RequestParam("id") Long id, Model model) {
-        PetResponse petResponse = petService.getPet(id);
-        model.addAttribute("pet", petResponse);
+    public String adoptionForm () {
         return "adoption-form";
     }
 

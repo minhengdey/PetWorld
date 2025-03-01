@@ -34,7 +34,6 @@ public class PetCareServicesService {
             PetCareServicesEntity service = petCareServicesMapper
                     .toServiceEntity((UserCreationRequest) request);
             service.setPassword(passwordEncoder.encode(service.getPassword()));
-            service.setRole(Role.PET_CARE_SERVICES.name());
             service.setCreatedAt(new Date());
             service.setIsDeleted(false);
             return petCareServicesMapper.toUserResponse(petCareServicesRepository.save(service));
@@ -45,9 +44,6 @@ public class PetCareServicesService {
 
     public PetCareServicesResponse update(Object request, Long id) {
         if (request instanceof PetCareServicesRequest) {
-            if (petCareServicesRepository.existsByEmailAndIsDeleted(((PetCareServicesRequest) request).getEmail(), false)) {
-                throw new AppException(ErrorCode.USER_EXISTED);
-            }
             PetCareServicesEntity petCareServices = petCareServicesRepository
                     .findByIdAndIsDeleted(id, false)
                     .orElseThrow(() ->

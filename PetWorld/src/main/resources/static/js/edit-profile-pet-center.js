@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const avatar = document.getElementById('avatarUrl').value;
 
             try {
-                const updateResponse = await fetch(`/pet-care-services/${id}`, {
+                const updateResponse = await fetch(`/pet-center/${id}`, {
                     method: 'PUT',
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ name, address, phone, email, password, description, avatar })
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (updateResponse.ok) {
                     const data = await updateResponse.json();
                     console.log("Cập nhật thành công:", data);
-                    window.location.href = '/pet-care-services-profile'; // Chuyển hướng sau khi cập nhật
+                    window.location.href = '/pet-center-profile'; // Chuyển hướng sau khi cập nhật
                 } else {
                     console.error("Lỗi khi cập nhật thông tin:", await updateResponse.text());
                     alert('Cập nhật thất bại!');

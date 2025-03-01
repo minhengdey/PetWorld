@@ -1,9 +1,4 @@
-function getPetIdFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id');
-}
-
-const petId = getPetIdFromUrl();
+const petId = sessionStorage.getItem('selectedPetId');
 // Fetch user info when the page loads
 document.addEventListener('DOMContentLoaded', async function() {
     fetch('/api/auth/myInfo', {

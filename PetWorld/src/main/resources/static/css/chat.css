@@ -233,3 +233,52 @@ body {
     }
 }
 
+.back-button {
+    display: flex;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: #333;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.1);
+}
+
+/* Show back button on mobile */
+@media (max-width: 768px) {
+    .back-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-container.show-friends .friends-list {
+        display: flex;
+    }
+
+    .chat-container.show-friends .chat-area {
+        display: none;
+    }
+
+    .chat-container.show-chat .friends-list {
+        display: none;
+    }
+
+    .chat-container.show-chat .chat-area {
+        display: flex;
+    }
+}

@@ -41,12 +41,6 @@ public class PetCenterService {
 
     public PetCenterResponse update(Object request, Long id) {
         if (request instanceof PetCenterRequest) {
-            if (!petCenterRepository.existsByIdAndIsDeleted(id, false)) {
-                throw new AppException(ErrorCode.USER_NOT_FOUND);
-            }
-            if (petCenterRepository.existsByEmailAndIsDeleted(((PetCenterRequest) request).getEmail(), false)) {
-                throw new AppException(ErrorCode.USER_EXISTED);
-            }
             PetCenterEntity petCenter = petCenterRepository.findByIdAndIsDeleted(id, false)
                     .orElseThrow(() ->
                             new AppException(ErrorCode.USER_NOT_FOUND));
