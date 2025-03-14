@@ -23,9 +23,9 @@ public class UploadController {
     UploadService uploadService;
 
     @PostMapping()
-    public ApiResponse<Object> uploadFile (@RequestParam("file") MultipartFile file) {
+    public ApiResponse<String> uploadFile (@RequestParam("file") MultipartFile file) {
         try {
-            return ApiResponse.builder()
+            return ApiResponse.<String>builder()
                     .result(uploadService.uploadFile(file))
                     .code(1000)
                     .build();

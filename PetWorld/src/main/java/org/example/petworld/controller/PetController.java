@@ -70,7 +70,7 @@ public class PetController {
     }
 
     @GetMapping(value = "/my-pets")
-    @PostMapping("hasRole('PET_OWNER') or hasRole('PET_CENTER')")
+    @PreAuthorize("hasRole('PET_OWNER') or hasRole('PET_CENTER')")
     public ApiResponse<Set<PetResponse>> getAllByUserId () {
         String role = String.valueOf(SecurityContextHolder.getContext()
                 .getAuthentication().getAuthorities());
@@ -109,7 +109,6 @@ public class PetController {
     }
 
     @PutMapping(value = "/{id}")
-    @PostAuthorize("hasRole('PET_OWNER') or hasRole('PET_CENTER') or (#id.toString() == authentication.token.claims['sub'] and hasRole('PET'))")
     public ApiResponse<PetResponse> updatePetByIdAndUserId (@RequestBody @Valid PetRequest request, @PathVariable("id") Long id) {
         String role = String.valueOf(SecurityContextHolder.getContext()
                 .getAuthentication().getAuthorities());

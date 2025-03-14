@@ -34,11 +34,11 @@ document.addEventListener("DOMContentLoaded", function() {
             galleryItem.className = 'gallery-item-wrapper';
 
             galleryItem.innerHTML = `
-                    <div class="gallery-item">
-                        <img src="${event.target.result}" alt="Gallery preview" class="gallery-img">
-                        <button type="button" class="remove-image" data-name="${file.name}">&times;</button>
-                    </div>
-                `;
+                <div class="gallery-item">
+                    <img src="${event.target.result}" alt="Gallery preview" class="gallery-img">
+                    <button type="button" class="remove-image" data-name="${file.name}">×</button>
+                </div>
+            `;
 
             galleryPreview.appendChild(galleryItem);
 
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const avatarFile = avatarInput.files[0];
         if (!avatarFile) {
-            alert("Please select a profile picture.");
+            alert("Please select a profile picture for your pet.");
             return;
         }
 
@@ -123,13 +123,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     window.location.href = '/pets-management';
                 }
             } else {
-                alert('Failed to add pet');
+                alert('Failed to add pet: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred');
+            alert('An error occurred while adding your pet. Please try again.');
         }
     });
+
 
     // Cancel button
     document.getElementById('cancelAddPet').addEventListener('click', function() {

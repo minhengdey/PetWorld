@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Pet Profile - Pet World</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/pet-profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        .edit-profile-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+        .edit-profile-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .edit-profile-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .edit-profile-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .form-section {
+            margin-bottom: 24px;
+        }
+        .form-section h2 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-section h2 .material-symbols-outlined {
+            color: #9b87f5;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #9b87f5;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(155, 135, 245, 0.2);
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #9b87f5;
+        }
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 4px solid #e5deff;
+            position: relative;
+        }
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .avatar-preview:hover .avatar-overlay {
+            opacity: 1;
+        }
+        .avatar-overlay span {
+            color: white;
+            font-size: 24px;
+        }
+        .avatar-input {
+            display: none;
+        }
+        .change-avatar-btn {
+            background: #f0ebff;
+            color: #7E69AB;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .change-avatar-btn:hover {
+            background: #e5deff;
+        }
+        .gallery-section {
+            margin-bottom: 24px;
+        }
+        .gallery-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gallery-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .gallery-item:hover .remove-btn {
+            opacity: 1;
+        }
+        .gallery-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gallery-upload:hover {
+            border-color: #9b87f5;
+            background: #f0ebff;
+        }
+        .gallery-upload span {
+            display: block;
+            color: #666;
+            margin-top: 8px;
+        }
+        .gallery-input {
+            display: none;
+        }
+        .form-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 32px;
+        }
+        .cancel-btn {
+            padding: 10px 24px;
+            background: #f1f1f1;
+            color: #666;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .cancel-btn:hover {
+            background: #e5e5e5;
+        }
+        .save-btn {
+            padding: 10px 24px;
+            background: #9b87f5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .save-btn:hover {
+            background: #8b76f4;
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <main>
+        <div class="edit-profile-container">
+            <div class="edit-profile-header">
+                <h1>Edit Pet Profile</h1>
+                <p>Update your pet's information below</p>
+            </div>
+            <form id="edit-pet-form">
+                <!-- Avatar Section -->
+                <div class="avatar-section">
+                    <div class="avatar-preview">
+                        <img id="avatar-preview-img" src="/images/default-pet.jpg" alt="Pet Avatar">
+                        <div class="avatar-overlay">
+                            <span class="material-symbols-outlined">photo_camera</span>
+                        </div>
+                    </div>
+                    <input type="file" id="avatar-input" class="avatar-input" accept="image/*">
+                    <label for="avatar-input" class="change-avatar-btn">
+                        <span class="material-symbols-outlined">photo_camera</span>
+                        Change Avatar
+                    </label>
+                </div>
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h2>
+                        <span class="material-symbols-outlined">pets</span>
+                        Basic Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="pet-name">Name</label>
+                            <input type="text" id="pet-name" placeholder="Enter pet's name">
+                        </div>
+                        <div class="form-group">
+                            <label for="pet-species">Breed</label>
+                            <input type="text" id="pet-species" placeholder="Enter breed">
+                        </div>
+                        <div class="form-group">
+                            <label for="pet-breed">Breed</label>
+                            <input type="text" id="pet-breed" placeholder="Enter breed">
+                        </div>
+                        <div class="form-group">
+                            <label for="pet-dob">Date of Birth</label>
+                            <input type="date" id="pet-dob">
+                        </div>
+                        <div class="form-group">
+                            <label for="pet-gender">Breed</label>
+                            <input type="text" id="pet-gender" placeholder="Enter breed">
+                        </div>
+                        <div class="form-group">
+                            <label for="pet-color">Color</label>
+                            <input type="text" id="pet-color" placeholder="Enter pet's color">
+                        </div>
+                        <div class="form-group">
+                            <label for="pet-weight">Weight (kg)</label>
+                            <input type="number" id="pet-weight" placeholder="Enter weight in kg" step="0.1" min="0">
+                        </div>
+                    </div>
+                </div>
+                <!-- Health Information -->
+                <div class="form-section">
+                    <h2>
+                        <span class="material-symbols-outlined">medical_services</span>
+                        Health Information
+                    </h2>
+                    <div class="form-group">
+                        <label>Health Status</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="is-neutered">
+                                <label for="is-neutered">Neutered/Spayed</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="is-vaccinated">
+                                <label for="is-vaccinated">Vaccinated</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Photo Gallery -->
+                <div class="form-section gallery-section">
+                    <h2>
+                        <span class="material-symbols-outlined">photo_library</span>
+                        Photo Gallery
+                    </h2>
+                    <div class="gallery-preview" id="gallery-preview">
+                        <!-- Gallery images will be added here dynamically -->
+                    </div>
+                    <input type="file" id="gallery-input" class="gallery-input" accept="image/*" multiple>
+                    <label for="gallery-input" class="gallery-upload">
+                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <span>Click to add photos</span>
+                    </label>
+                </div>
+                <!-- Form Buttons -->
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">
+                        <span class="material-symbols-outlined">save</span>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load pet data from API
+        loadPetData();
+
+        // Handle avatar preview
+        const avatarInput = document.getElementById('avatar-input');
+        const avatarPreview = document.getElementById('avatar-preview-img');
+
+        avatarInput.addEventListener('change', function(event) {
+            if (event.target.files && event.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        });
+
+        // Handle gallery preview
+        const galleryInput = document.getElementById('gallery-input');
+        const galleryPreview = document.getElementById('gallery-preview');
+
+        galleryInput.addEventListener('change', function(event) {
+            if (event.target.files) {
+                for (let i = 0; i < event.target.files.length; i++) {
+                    const file = event.target.files[i];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addGalleryImage(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Form submission
+        const form = document.getElementById('edit-pet-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            savePetData();
+        });
+
+        // Cancel button
+        document.getElementById('cancel-btn').addEventListener('click', function() {
+            // Navigate back to pet profile
+            window.location.href = '/pet-profile';
+        });
+        // Function to add a gallery image to the preview
+        function addGalleryImage(src, id) {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            if (id) galleryItem.dataset.id = id;
+
+            galleryItem.innerHTML = `
+            <img src="${src}" alt="Gallery Image">
+            <div class="remove-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        `;
+
+            // Handle remove button
+            galleryItem.querySelector('.remove-btn').addEventListener('click', function() {
+                galleryPreview.removeChild(galleryItem);
+            });
+
+            galleryPreview.appendChild(galleryItem);
+        }
+
+        // Function to load pet data from API
+        function loadPetData() {
+            const petId = sessionStorage.getItem('selectedPetId');
+
+            if (!petId) {
+                console.error('No pet ID provided');
+                return;
+            }
+
+            fetch(`/pet/${petId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 1000) {
+                        const pet = data.result;
+
+                        // Populate form fields
+                        document.getElementById('pet-name').value = pet.name || '';
+                        document.getElementById('pet-species').value = pet.species || '';
+                        document.getElementById('pet-breed').value = pet.breed || '';
+                        document.getElementById('pet-dob').value = pet.dob ? new Date(pet.dob).toISOString().split('T')[0] : '';
+                        document.getElementById('pet-gender').value = pet.gender || '';
+                        document.getElementById('pet-color').value = pet.color || '';
+                        document.getElementById('pet-weight').value = pet.weight || '';
+                        document.getElementById('is-neutered').checked = pet.isNeutered || false;
+                        document.getElementById('is-vaccinated').checked = pet.isVaccinated || false;
+
+                        // Set avatar preview
+                        if (pet.avatar) {
+                            document.getElementById('avatar-preview-img').src = pet.avatar;
+                        }
+
+                        // Add gallery images
+                        if (pet.gallery && pet.gallery.length > 0) {
+                            galleryPreview.innerHTML = ''; // Clear preview
+                            pet.gallery.forEach((image, index) => {
+                                addGalleryImage(image, index);
+                            });
+                        }
+                    } else {
+                        console.error('Error loading pet data:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching pet data:', error);
+                });
+        }
+
+        // Function to save pet data to API
+        async function savePetData() {
+            const petId = sessionStorage.getItem('selectedPetId');
+            console.log(petId)
+
+            if (!petId) {
+                console.error('No pet ID provided');
+                return;
+            }
+
+            let avatar = null;
+            // Add avatar if changed
+            const avatarInput = document.getElementById('avatar-input');
+            if (avatarInput.files && avatarInput.files[0]) {
+                // Upload avatar
+                const avatarFormData = new FormData();
+                avatarFormData.append("file", avatarInput.files[0]);
+                const avatarResponse = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: avatarFormData
+                });
+                const avatarData = await avatarResponse.json();
+                if (avatarData.code !== 1000) throw new Error('Avatar upload failed');
+                avatar = avatarData.result;
+            }
+            let galleryUrls = [];
+            // Add gallery images
+            const galleryInput = document.getElementById('gallery-input');
+            if (galleryInput.files) {
+                // Upload gallery images
+                for (const file of galleryInput.files) {
+                    const galleryFormData = new FormData();
+                    galleryFormData.append("file", file);
+
+                    const galleryResponse = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: galleryFormData
+                    });
+
+                    if (galleryResponse.ok) {
+                        const galleryData = await galleryResponse.json();
+                        galleryUrls.push(galleryData.result);
+                    }
+                }
+
+            }
+
+
+            // Submit the form data
+            await fetch(`/pet/${petId}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: document.getElementById('pet-name').value,
+                    species: document.getElementById('pet-species').value,
+                    breed: document.getElementById('pet-breed').value,
+                    dob: document.getElementById('pet-dob').value,
+                    gender: document.getElementById('pet-gender').value,
+                    color: document.getElementById('pet-color').value,
+                    weight: document.getElementById('pet-weight').value,
+                    isNeutered: document.getElementById('is-neutered').checked,
+                    isVaccinated: document.getElementById('is-vaccinated').checked,
+                    avatar: avatar,
+                    gallery: galleryUrls
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 1000) {
+                        alert('Pet profile updated successfully!');
+                        window.history.back();
+                    } else {
+                        alert(`Error: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving pet data:', error);
+                    alert('An error occurred while saving the pet profile.');
+                });
+        }
+    });
+</script>
+</body>
+</html>

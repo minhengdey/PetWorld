@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet World | Verify Your Account</title>
+    <link rel="stylesheet" href="/css/verify.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+</head>
+<body>
+<div class="verification-container">
+    <div class="form-header">
+        <h2 class="logo-text">🐈 Pet World</h2>
+        <h2>Verify Your Account</h2>
+        <p>We've sent a verification code to your email</p>
+    </div>
+
+    <form id="verification-form">
+        <div class="verification-code-container">
+            <div class="code-input-group">
+                <input type="text" class="code-input" maxlength="1" autofocus>
+                <input type="text" class="code-input" maxlength="1">
+                <input type="text" class="code-input" maxlength="1">
+                <input type="text" class="code-input" maxlength="1">
+                <input type="text" class="code-input" maxlength="1">
+                <input type="text" class="code-input" maxlength="1">
+            </div>
+            <p class="hint-text">Enter the 6-digit code sent to your email</p>
+        </div>
+
+        <div class="timer-section">
+            <p>Didn't receive the code? <span id="timer">02:00</span></p>
+        </div>
+
+        <button type="submit" class="submit-button">Verify Account</button>
+
+        <div class="resend-link">
+            <a href="#" id="resend-link" class="disabled">Resend Code</a>
+        </div>
+
+        <div class="back-to-login">
+            <a href="/auth/log-in">Back to Login</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        const inputs = document.querySelectorAll(".code-input");
+        const form = document.getElementById("verification-form");
+        const timerElement = document.getElementById("timer");
+        const resendLink = document.getElementById("resend-link");
+
+        let timeLeft = 120; // 2 minutes countdown
+        const countdown = setInterval(() => {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                clearInterval(countdown);
+                resendLink.classList.remove("disabled");
+            }
+        }, 1000);
+
+        resendLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (!resendLink.classList.contains("disabled")) {
+                location.reload(); // Reload page to resend OTP and restart timer
+            }
+        });
+
+        inputs.forEach((input, index) => {
+            input.addEventListener("input", (event) => {
+                if (event.inputType === "insertText" && input.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener("keydown", (event) => {
+                if (event.key === "Backspace" && input.value.length === 0 && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        const userData = JSON.parse(sessionStorage.getItem("userData"));
+
+        let otp = await fetch('/api/auth/sendOTP', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData.email)
+        })
+            .then(otp => otp.json());
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const otpCode = Array.from(inputs).map(input => input.value).join("");
+            console.log("Entered OTP:", otpCode);
+            console.log(otp);
+            if (otp.toString() === otpCode.toString()) {
+                try {
+                    const response = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    })
+                        .then(response => response.json());
+
+                    if (response.code === 1000) {
+                        alert('Registration successful!');
+                        window.location.href = '/auth/log-in';
+                    } else {
+                        alert('Registration failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Registration error:', error);
+                }
+            } else {
+                alert('Incorrect OTP');
+            }
+        });
+    });
+</script>
+</body>
+</html>

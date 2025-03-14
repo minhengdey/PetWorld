@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    // Sidebar toggle functionality
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const layout = document.querySelector('.layout');
+
+    sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('collapsed');
+        layout.classList.toggle('sidebar-collapsed');
+    });
+
     // Fetch user info
     fetch('/api/auth/myInfo', {
         method: 'GET',

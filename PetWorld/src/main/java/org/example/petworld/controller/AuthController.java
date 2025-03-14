@@ -1,6 +1,7 @@
 package org.example.petworld.controller;
 
 import com.nimbusds.jose.JOSEException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.example.petworld.dto.response.UserResponse;
 import org.example.petworld.enums.ErrorCode;
 import org.example.petworld.exception.AppException;
 import org.example.petworld.service.AuthenticationService;
+import org.example.petworld.service.SendEmailService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
     AuthenticationService authenticationService;
+    SendEmailService sendEmailService;
 
     @PostMapping(value = "/register")
     public ApiResponse<UserResponse> register (@RequestBody UserCreationRequest request) {
@@ -155,5 +158,14 @@ public class AuthController {
                 .result(authenticationService.refresh(request))
                 .code(1000)
                 .build();
+    }
+
+    @PostMapping (value = "/sendOTP")
+    public String sendOTP (@RequestBody String email) {
+        try {
+            return sendEmailService.sendOtp(email);
+        } catch (MessagingException e) {
+            return "Failed to send OTP.";
+        }
     }
 }

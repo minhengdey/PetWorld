@@ -3,107 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Pet</title>
+    <title>Pet World - Add New Pet</title>
+    <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="/css/add-pet.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 </head>
 <body>
 <div class="container">
-    <h1>Add New Pet</h1>
-    <form id="addPetForm" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="petName">Name</label>
-            <input type="text" id="petName" name="name" required>
-        </div>
 
-        <div class="form-group">
-            <label for="petDob">Date of Birth</label>
-            <input type="date" id="petDob" name="dob" required>
-        </div>
+    <main>
+        <div class="add-pet-container">
+            <div class="add-pet-header">
+                <h1>Add New Pet</h1>
+                <p>Fill in the details to add your pet</p>
+            </div>
 
-        <div class="form-group">
-            <label for="petGender">Gender</label>
-            <select id="petGender" name="gender" required>
-                <option value="">Select gender</option>
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
-            </select>
-        </div>
+            <div class="add-pet-card">
+                <form id="addPetForm" enctype="multipart/form-data">
+                    <div class="avatar-upload-section">
+                        <div class="avatar-preview">
+                            <img id="avatarPreview" src="/images/default-avatar.png" alt="Pet Avatar">
+                            <div class="upload-overlay">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                        <div class="avatar-controls">
+                            <div class="file-input-wrapper">
+                                <input type="file" id="petAvatar" name="file" class="file-input" accept="image/*">
+                                <label for="petAvatar" class="upload-button">
+                                    <i class="fas fa-upload"></i>
+                                    Choose Photo
+                                </label>
+                            </div>
+                            <p class="avatar-hint">Upload a clear photo of your pet</p>
+                        </div>
+                        <input type="hidden" id="avatarUrl" name="avatarUrl">
+                    </div>
 
-        <div class="form-group">
-            <label for="petSpecies">Species</label>
-            <input type="text" id="petSpecies" name="species" required>
-        </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="petName">Pet Name</label>
+                            <input type="text" id="petName" name="name" class="form-input" placeholder="What's your pet's name?" required>
+                        </div>
 
-        <div class="form-group">
-            <label for="petBreed">Breed</label>
-            <input type="text" id="petBreed" name="breed" required>
-        </div>
+                        <div class="form-group">
+                            <label for="petSpecies">Species</label>
+                            <input type="text" id="petSpecies" name="species" class="form-input" placeholder="e.g., Dog, Cat, Bird" required>
+                        </div>
 
-        <div class="form-group">
-            <label for="petWeight">Weight (kg)</label>
-            <input type="number" id="petWeight" name="weight" step="0.1" min="0" required>
-        </div>
+                        <div class="form-group">
+                            <label for="petBreed">Breed</label>
+                            <input type="text" id="petBreed" name="breed" class="form-input" placeholder="e.g., Golden Retriever, Siamese" required>
+                        </div>
 
-        <div class="form-group">
-            <label for="color">Color:</label>
-            <input type="text" id="color" name="color" required>
-        </div>
-        <div class="form-group">
-            <div class="checkbox-group">
-                <input type="checkbox" id="is_neutered" name="is_neutered">
-                <label for="is_neutered">Is Neutered</label>
+                        <div class="form-group">
+                            <label for="petDob">Date of Birth</label>
+                            <input type="date" id="petDob" name="dob" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petGender">Gender</label>
+                            <select id="petGender" name="gender" class="form-input" required>
+                                <option value="">Select gender</option>
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petWeight">Weight (kg)</label>
+                            <input type="number" id="petWeight" name="weight" class="form-input" step="0.1" min="0" placeholder="Enter weight in kg" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="color">Color</label>
+                            <input type="text" id="color" name="color" class="form-input" placeholder="e.g., Brown, Black & White" required>
+                        </div>
+                    </div>
+
+                    <div class="health-section">
+                        <h3>Health Information</h3>
+                        <div class="checkbox-grid">
+                            <div class="form-group">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="is_neutered" name="is_neutered" class="custom-checkbox">
+                                    <label for="is_neutered" class="checkbox-label">Is Neutered/Spayed</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="is_vaccinated" name="is_vaccinated" class="custom-checkbox">
+                                    <label for="is_vaccinated" class="checkbox-label">Is Vaccinated</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-section">
+                        <h3>Pet Gallery</h3>
+                        <p class="section-description">Add multiple photos of your pet to create a gallery</p>
+
+                        <div class="gallery-preview" id="galleryPreview"></div>
+
+                        <div class="gallery-upload">
+                            <input type="file" id="galleryImages" name="gallery[]" class="file-input" accept="image/*" multiple>
+                            <label for="galleryImages" class="gallery-upload-button">
+                                <i class="fas fa-images"></i>
+                                Add Gallery Images
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" id="cancelAddPet">Cancel</button>
+                        <button type="submit" class="save-button" id="submitAddPet">Add Pet</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="form-group">
-            <div class="checkbox-group">
-                <input type="checkbox" id="is_vaccinated" name="is_vaccinated">
-                <label for="is_vaccinated">Is Vaccinated</label>
-            </div>
-        </div>
-
-        <input type="hidden" id="avatarUrl" name="avatarUrl">
-
-        <div class="form-group">
-            <label for="petAvatar">Profile Picture</label>
-            <div class="preview-container">
-                <img id="avatarPreview" src="" alt="Avatar Preview">
-            </div>
-            <div class="file-input-wrapper">
-                <input type="file" id="petAvatar" name="file" class="file-input" accept="image/*">
-                <label for="petAvatar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    <span>Choose file</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="galleryImages">Gallery Images</label>
-            <div class="gallery-preview" id="galleryPreview"></div>
-            <div class="file-input-wrapper">
-                <input type="file" id="galleryImages" name="gallery[]" class="file-input" accept="image/*" multiple>
-                <br>
-                <label for="galleryImages" class="upload-label">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    <span>Add Gallery Images</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" class="submit-btn" id="submitAddPet">Add Pet</button>
-            <button type="button" class="cancel-btn" id="cancelAddPet">Cancel</button>
-        </div>
-    </form>
+    </main>
 </div>
 
 <script src="/js/add-pet.js"></script>

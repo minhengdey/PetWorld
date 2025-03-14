@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -42,14 +43,6 @@ public class ServiceController {
                 .build();
     }
 
-    @GetMapping(value = "/all")
-    public ApiResponse<Set<ServiceResponse>> getAll() {
-        return ApiResponse.<Set<ServiceResponse>>builder()
-                .code(1000)
-                .result(serviceService.getAll())
-                .build();
-    }
-
     @PreAuthorize("hasRole('PET_CARE_SERVICES')")
     @GetMapping(value = "/my-services")
     public ApiResponse<Set<ServiceResponse>> getAllMyServices () {
@@ -57,6 +50,14 @@ public class ServiceController {
                 .getContext().getAuthentication()).getToken().getSubject());
         return ApiResponse.<Set<ServiceResponse>>builder()
                 .result(serviceService.getAllMyServices(userId))
+                .code(1000)
+                .build();
+    }
+
+    @GetMapping(value = "/all")
+    public ApiResponse<List<ServiceResponse>> getAllServicesAvailable () {
+        return ApiResponse.<List<ServiceResponse>>builder()
+                .result(serviceService.getAllServiceAvailable())
                 .code(1000)
                 .build();
     }

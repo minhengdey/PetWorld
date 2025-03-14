@@ -143,44 +143,15 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.code === 1000) {
-                document.getElementById('name').textContent = data.result.name || 'Unknown';
-                document.getElementById('avatar').src = data.result.avatar || '/images/default-avatar.png';
-                document.getElementById('role').textContent = data.result.role || 'Unknown Role';
                 document.getElementById('center-name').textContent = data.result.name;
                 document.getElementById('center-address').textContent = data.result.address;
                 document.getElementById('center-email').textContent = data.result.email;
                 document.getElementById('center-phone').textContent = data.result.phone;
                 document.getElementById('center-description').textContent = data.result.description;
                 document.getElementById('center-avatar').src = data.result.avatar || '/placeholder.svg';
-
-                // Show menu based on role
-                const role = data.result.role;
-                hideAllMenus();
-                showMenuForRole(role);
             }
         })
         .catch(error => {
             console.error("Error fetching data:", error);
         });
-
-    function hideAllMenus() {
-        document.getElementById('petOwnerMenu').style.display = 'none';
-        document.getElementById('petMenu').style.display = 'none';
-        document.getElementById('doctorMenu').style.display = 'none';
-        document.getElementById('petCenterMenu').style.display = 'none';
-    }
-
-    function showMenuForRole(role) {
-        const menuMap = {
-            'PET_OWNER': 'petOwnerMenu',
-            'PET': 'petMenu',
-            'PET_CARE_SERVICES': 'doctorMenu',
-            'PET_CENTER': 'petCenterMenu'
-        };
-
-        const menuId = menuMap[role];
-        if (menuId) {
-            document.getElementById(menuId).style.display = 'block';
-        }
-    }
 });

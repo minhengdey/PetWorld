@@ -94,6 +94,11 @@ public class AppointmentService {
         return appointments;
     }
 
+    public List<AppointmentResponse> getAllAppointment() {
+        return appointmentRepository.findAll().stream()
+                .map(appointmentMapper::toResponse).toList();
+    }
+
     public AppointmentResponse updateAppointment(AppointmentRequest request, Long id) {
         AppointmentEntity appointment = appointmentRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_FOUND));

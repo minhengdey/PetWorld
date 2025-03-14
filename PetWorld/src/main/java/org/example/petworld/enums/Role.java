@@ -4,5 +4,6 @@ public enum Role {
     PET_OWNER,
     PET_CENTER,
     PET_CARE_SERVICES,
-    PET
+    PET,
+    ADMIN
 }

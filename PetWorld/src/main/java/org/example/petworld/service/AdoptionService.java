@@ -71,6 +71,11 @@ public class AdoptionService {
         return adoptionResponses;
     }
 
+    public List<AdoptionResponse> getAllAdoption() {
+        return adoptionRepository.findAll().stream()
+                .map(adoptionMapper::toResponse).toList();
+    }
+
     public AdoptionResponse updateAdoption(AdoptionRequest request, Long id) {
         AdoptionEntity adoption = adoptionRepository.findByIdAndIsDeleted(id, false).orElseThrow(() ->
                 new AppException(ErrorCode.ADOPTION_NOT_FOUND));

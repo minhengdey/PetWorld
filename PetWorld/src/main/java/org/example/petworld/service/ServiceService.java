@@ -33,8 +33,11 @@ public class ServiceService {
         PetCareServicesEntity petCareServices = petCareServicesRepository
                 .findByIdAndIsDeleted(petCareServicesId, false).orElseThrow(() ->
                         new AppException(ErrorCode.USER_NOT_FOUND));
-        if (serviceRepository.existsByNameAndIsDeleted(request.getName(), false)) {
-            throw new AppException(ErrorCode.SERVICE_EXISTED);
+        Set<ServiceEntity> serviceEntities = petCareServices.getServices();
+        for (ServiceEntity service : serviceEntities) {
+            if (service.getName().equals(request.getName())) {
+                throw new AppException(ErrorCode.SERVICE_EXISTED);
+            }
         }
         ServiceEntity service = serviceMapper.toEntity(request);
         service.setCreatedAt(new Date());
@@ -51,10 +54,16 @@ public class ServiceService {
         return serviceMapper.toResponse(service);
     }
 
-    public Set<ServiceResponse> getAll() {
+    public List<ServiceResponse> getAllService() {
+        return serviceRepository.findAll().stream()
+                .map(serviceMapper::toResponse)
+                .toList();
+    }
+
+    public List<ServiceResponse> getAllServiceAvailable() {
         return serviceRepository.findAllByIsDeleted(false).stream()
                 .map(serviceMapper::toResponse)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     public Set<ServiceResponse> getAllMyServices(Long petCareServicesId) {

@@ -17,33 +17,47 @@
 
     <form id="register-form">
         <div class="form-group">
-            <label for="name">Full Name</label>
+            <label for="name">Full Name <span class="required">*</span></label>
             <input type="text" id="name" class="form-input" placeholder="Enter your name" required />
         </div>
 
         <div class="form-group">
-            <label for="email">Email Address</label>
+            <label for="email">Email Address <span class="required">*</span></label>
             <input type="email" id="email" class="form-input" placeholder="Enter your email" required />
+            <small class="hint-text">Please enter a valid email address</small>
         </div>
 
         <div class="form-group">
-            <label for="phone">Phone Number</label>
+            <label for="phone">Phone Number <span class="required">*</span></label>
             <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number" required />
         </div>
 
         <div class="form-group">
-            <label for="address">Address</label>
+            <label for="address">Address <span class="required">*</span></label>
             <input type="text" id="address" class="form-input" placeholder="Enter your address" required />
         </div>
 
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" class="form-input" placeholder="Create a password" required />
+            <label for="password">Password <span class="required">*</span></label>
+            <div class="password-container">
+                <input type="password" id="password" class="form-input" placeholder="Create a password (min. 8 characters)" required />
+                <i class="fa-solid fa-eye-slash toggle-password" data-target="password"></i>
+            </div>
+            <small class="hint-text">Password must be at least 8 characters long</small>
         </div>
 
         <div class="form-group">
-            <label for="role">I am a</label>
+            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+            <div class="password-container">
+                <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required />
+                <i class="fa-solid fa-eye-slash toggle-password" data-target="confirmPassword"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="role">I am a <span class="required">*</span></label>
             <select id="role" class="form-input" required>
+                <option value="" disabled selected>Select your role</option>
                 <option value="PET_OWNER">Pet Owner</option>
                 <option value="PET_CENTER">Pet Adoption Center</option>
                 <option value="PET_CARE_SERVICES">Pet Care Service Provider</option>
@@ -57,7 +71,7 @@
             </div>
             <div class="file-input-wrapper">
                 <input type="file" id="avatar" class="file-input" accept="image/*">
-                <label for="avatar">
+                <label for="avatar" class="file-label">
                     <i class="fas fa-upload file-input-icon"></i>
                     <span>Choose file</span>
                 </label>
@@ -65,6 +79,10 @@
         </div>
 
         <button type="submit" class="submit-button">Create Account</button>
+
+        <div class="login-link">
+            Already have an account? <a href="/auth/log-in">Log in</a>
+        </div>
     </form>
 </div>
 

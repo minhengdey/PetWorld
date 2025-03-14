@@ -114,6 +114,11 @@ public class PetService {
         return pets;
     }
 
+    public List<PetResponse> getAllPet() {
+        return petRepository.findAll()
+                .stream().map(petMapper::toPetResponse).toList();
+    }
+
     public Set<PetResponse> getFriendSuggestions(Long petId) {
         List<PetEntity> petEntities = petRepository.findAll();
         Set<PetResponse> pets = new HashSet<>();
@@ -133,7 +138,7 @@ public class PetService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         PetEntity pet = petRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND));
-        if (petRepository.existsByNameAndPetOwnerAndIsDeleted(request.getName(), petOwner, false)) {
+        if (!request.getName().equals(pet.getName()) && petRepository.existsByNameAndPetOwnerAndIsDeleted(request.getName(), petOwner, false)) {
             throw new AppException(ErrorCode.PET_NAME_EXISTED);
         }
         petMapper.update(pet, request);
@@ -148,7 +153,7 @@ public class PetService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         PetEntity pet = petRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND));
-        if (petRepository.existsByNameAndPetCenterAndIsDeleted(request.getName(), petCenter, false)) {
+        if (!request.getName().equals(pet.getName()) && petRepository.existsByNameAndPetCenterAndIsDeleted(request.getName(), petCenter, false)) {
             throw new AppException(ErrorCode.PET_NAME_EXISTED);
         }
         petMapper.update(pet, request);

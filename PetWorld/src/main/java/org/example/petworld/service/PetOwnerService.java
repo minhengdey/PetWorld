@@ -34,6 +34,8 @@ public class PetOwnerService {
             PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(id, false)
                     .orElseThrow(() ->
                             new AppException(ErrorCode.USER_NOT_FOUND));
+            ((PetOwnerRequest) request).setPassword(passwordEncoder
+                    .encode(((PetOwnerRequest) request).getPassword()));
             petOwnerMapper.update(petOwner, (PetOwnerRequest) request);
             petOwner.setUpdatedAt(new Date());
             return petOwnerMapper.toPetOwnerResponse(petOwnerRepository.save(petOwner));

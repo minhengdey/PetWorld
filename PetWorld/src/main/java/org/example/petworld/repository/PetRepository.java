@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface PetRepository extends JpaRepository<PetEntity, Long> {
     Optional<PetEntity> findByIdAndIsDeleted (Long id, boolean isDeleted);
+    List<PetEntity> findAllByIsDeleted (Boolean isDeleted);
     boolean existsByNameAndPetCenterAndIsDeleted (String name, PetCenterEntity petCenter, boolean isDeleted);
     boolean existsByNameAndPetOwnerAndIsDeleted (String name, PetOwnerEntity petOwner, boolean isDeleted);
 }

@@ -100,7 +100,7 @@ public class FriendshipService {
         return friendshipResponses;
     }
 
-    public Set<FriendshipResponse> getFriendRequests (Long petId) {
+    public Set<FriendshipResponse> getFriendRequests(Long petId) {
         List<FriendshipEntity> list = friendshipRepository.findAll();
         Set<FriendshipResponse> friendshipResponses = new HashSet<>();
         for (FriendshipEntity friendship : list) {
@@ -109,6 +109,11 @@ public class FriendshipService {
             }
         }
         return friendshipResponses;
+    }
+
+    public List<FriendshipResponse> getAllFriendship() {
+        return friendshipRepository.findAll().stream()
+                .map(friendshipMapper::toResponse).toList();
     }
 
     public void deleteFriendship(Long pet1Id, Long pet2Id) {

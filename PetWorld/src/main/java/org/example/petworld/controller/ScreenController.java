@@ -140,4 +140,19 @@ public class ScreenController {
     public String chat () {
         return "chat";
     }
+
+    @GetMapping(value = "/edit-pet")
+    public String editPet () {
+        return "edit-pet";
+    }
+
+    @GetMapping(value = "/auth/verify")
+    public String verify () {
+        return "verify";
+    }
+
+    @GetMapping(value = "/admin-dashboard")
+    public String adminDashboard () {
+        return "admin-dashboard";
+    }
 }

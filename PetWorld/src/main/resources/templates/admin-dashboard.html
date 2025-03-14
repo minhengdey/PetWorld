@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pet World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Pet World</h2>
+            <span class="material-symbols-outlined" id="menu-toggle">menu</span>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="active" data-section="dashboard">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="nav-text">Dashboard</span>
+                </li>
+                <li data-section="users">
+                    <span class="material-symbols-outlined">group</span>
+                    <span class="nav-text">Users</span>
+                </li>
+                <li data-section="pets">
+                    <span class="material-symbols-outlined">pets</span>
+                    <span class="nav-text">Pets</span>
+                </li>
+                <li data-section="adoptions">
+                    <span class="material-symbols-outlined">favorite</span>
+                    <span class="nav-text">Adoptions</span>
+                </li>
+                <li data-section="services">
+                    <span class="material-symbols-outlined">medical_services</span>
+                    <span class="nav-text">Vet Services</span>
+                </li>
+                <li data-section="reports">
+                    <span class="material-symbols-outlined">report</span>
+                    <span class="nav-text">Reports</span>
+                </li>
+                <li data-section="settings">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="nav-text">Settings</span>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <button id="logout-btn">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="nav-text">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="content-header">
+            <div class="header-left">
+                <button class="menu-btn" id="menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <h1>Admin Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="search-bar">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="admin-profile">
+                    <div class="admin-avatar">
+                        <img src="/images/default-avatar.png" alt="Admin">
+                    </div>
+                    <div class="admin-info">
+                        <p class="admin-name">Admin User</p>
+                        <p class="admin-role">System Admin</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="content-section active">
+            <div class="section-header">
+                <h2>Dashboard Overview</h2>
+                <p>Welcome to the admin dashboard</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #e8f5e9;">
+                        <span class="material-symbols-outlined" style="color: #2e7d32;">person</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-value" id="user-count">0</p>
+                        <p class="stat-label">Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #e3f2fd;">
+                        <span class="material-symbols-outlined" style="color: #1565c0;">pets</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-value" id="pet-count">0</p>
+                        <p class="stat-label">Total Pets</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #fff3e0;">
+                        <span class="material-symbols-outlined" style="color: #e65100;">favorite</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-value" id="adoption-count">0</p>
+                        <p class="stat-label">Pending Adoptions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #f3e5f5;">
+                        <span class="material-symbols-outlined" style="color: #8e24aa;">medical_services</span>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-value" id="service-count">0</p>
+                        <p class="stat-label">Vet Services</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>User Activity (Last 7 Days)</h3>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="userActivityChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>User Distribution</h3>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="userDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <div class="section-header">
+                    <h3>Recent Activity</h3>
+                </div>
+                <div class="activity-list" id="recent-activities">
+                    <div class="activity-empty">
+                        <span class="material-symbols-outlined">history</span>
+                        <p>No recent activities</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users-section" class="content-section">
+            <div class="section-header">
+                <h2>User Management</h2>
+                <div class="action-buttons">
+                    <button class="filter-btn">
+                        <span class="material-symbols-outlined">filter_list</span>
+                        Filter
+                    </button>
+                    <button class="add-btn">
+                        <span class="material-symbols-outlined">add</span>
+                        Add User
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                    <tr>
+                        <td colspan="6" class="loading-cell">Loading users...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button class="pagination-btn prev-btn">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <div class="pagination-numbers" id="users-pagination">
+                    <button class="pagination-number active">1</button>
+                </div>
+                <button class="pagination-btn next-btn">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Pets Section -->
+        <section id="pets-section" class="content-section">
+            <div class="section-header">
+                <h2>Pet Management</h2>
+                <div class="action-buttons">
+                    <button class="filter-btn">
+                        <span class="material-symbols-outlined">filter_list</span>
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pet Name</th>
+                        <th>Owner</th>
+                        <th>Species</th>
+                        <th>Breed</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pets-table-body">
+                    <tr>
+                        <td colspan="7" class="loading-cell">Loading pets...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button class="pagination-btn prev-btn">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <div class="pagination-numbers" id="pets-pagination">
+                    <button class="pagination-number active">1</button>
+                </div>
+                <button class="pagination-btn next-btn">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Adoptions Section -->
+        <section id="adoptions-section" class="content-section">
+            <div class="section-header">
+                <h2>Adoption Requests</h2>
+                <div class="action-buttons">
+                    <button class="filter-btn">
+                        <span class="material-symbols-outlined">filter_list</span>
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="status-tabs">
+                <button class="status-tab active" data-status="pending">Pending</button>
+                <button class="status-tab" data-status="approved">Approved</button>
+                <button class="status-tab" data-status="rejected">Rejected</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pet</th>
+                        <th>Requester</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="adoptions-table-body">
+                    <tr>
+                        <td colspan="6" class="loading-cell">Loading adoption requests...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button class="pagination-btn prev-btn">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <div class="pagination-numbers" id="adoptions-pagination">
+                    <button class="pagination-number active">1</button>
+                </div>
+                <button class="pagination-btn next-btn">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services-section" class="content-section">
+            <div class="section-header">
+                <h2>Vet Services</h2>
+                <div class="action-buttons">
+                    <button class="filter-btn">
+                        <span class="material-symbols-outlined">filter_list</span>
+                        Filter
+                    </button>
+                    <button class="add-btn">
+                        <span class="material-symbols-outlined">add</span>
+                        Add Service
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Service Name</th>
+                        <th>Provider</th>
+                        <th>Price</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="services-table-body">
+                    <tr>
+                        <td colspan="7" class="loading-cell">Loading services...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button class="pagination-btn prev-btn">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <div class="pagination-numbers" id="services-pagination">
+                    <button class="pagination-number active">1</button>
+                </div>
+                <button class="pagination-btn next-btn">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports-section" class="content-section">
+            <div class="section-header">
+                <h2>Reports & Feedback</h2>
+                <div class="action-buttons">
+                    <button class="filter-btn">
+                        <span class="material-symbols-outlined">filter_list</span>
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="status-tabs">
+                <button class="status-tab active" data-status="reports">Reports</button>
+                <button class="status-tab" data-status="feedback">Feedback</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Reported by</th>
+                        <th>Type</th>
+                        <th>Content</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="reports-table-body">
+                    <tr>
+                        <td colspan="7" class="loading-cell">Loading reports...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button class="pagination-btn prev-btn">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <div class="pagination-numbers" id="reports-pagination">
+                    <button class="pagination-number active">1</button>
+                </div>
+                <button class="pagination-btn next-btn">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings-section" class="content-section">
+            <div class="section-header">
+                <h2>System Settings</h2>
+            </div>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h3>General Settings</h3>
+                    </div>
+                    <div class="settings-body">
+                        <div class="setting-item">
+                            <label>Site Name</label>
+                            <input type="text" value="Pet World" id="site-name">
+                        </div>
+                        <div class="setting-item">
+                            <label>Contact Email</label>
+                            <input type="email" value="contact@petworld.com" id="contact-email">
+                        </div>
+                        <div class="setting-item">
+                            <label>Maintenance Mode</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="maintenance-mode">
+                                <label for="maintenance-mode"></label>
+                            </div>
+                        </div>
+                        <button class="save-settings-btn">Save Changes</button>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h3>System Notifications</h3>
+                    </div>
+                    <div class="settings-body">
+                        <div class="setting-item">
+                            <label>Title</label>
+                            <input type="text" placeholder="Notification Title" id="notification-title">
+                        </div>
+                        <div class="setting-item">
+                            <label>Message</label>
+                            <textarea placeholder="Notification message..." id="notification-message"></textarea>
+                        </div>
+                        <div class="setting-item">
+                            <label>Target</label>
+                            <select id="notification-target">
+                                <option value="all">All Users</option>
+                                <option value="pet_owners">Pet Owners</option>
+                                <option value="vets">Veterinarians</option>
+                                <option value="adopters">Adopters</option>
+                            </select>
+                        </div>
+                        <button class="send-notification-btn">Send Notification</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card full-width">
+                <div class="settings-header">
+                    <h3>System Policies</h3>
+                </div>
+                <div class="settings-body">
+                    <div class="setting-item">
+                        <label>Terms of Service</label>
+                        <textarea id="terms-of-service" rows="6">Current terms of service content...</textarea>
+                    </div>
+                    <div class="setting-item">
+                        <label>Privacy Policy</label>
+                        <textarea id="privacy-policy" rows="6">Current privacy policy content...</textarea>
+                    </div>
+                    <button class="save-settings-btn">Update Policies</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Modals -->
+<div class="modal" id="edit-user-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit User</h3>
+            <button class="close-modal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="edit-user-name">Name</label>
+                <input type="text" id="edit-user-name">
+            </div>
+            <div class="form-group">
+                <label for="edit-user-email">Email</label>
+                <input type="email" id="edit-user-email">
+            </div>
+            <div class="form-group">
+                <label for="edit-user-role">Role</label>
+                <select id="edit-user-role">
+                    <option value="PET_OWNER">Pet Owner</option>
+                    <option value="VET">Veterinarian</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="edit-user-status">Status</label>
+                <select id="edit-user-status">
+                    <option value="ACTIVE">Active</option>
+                    <option value="DISABLED">Disabled</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn">Cancel</button>
+            <button class="save-btn" id="save-user-btn">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="view-adoption-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Adoption Request Details</h3>
+            <button class="close-modal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="modal-body" id="adoption-details">
+            <!-- Will be filled dynamically -->
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn">Close</button>
+            <button class="reject-btn" id="reject-adoption-btn">Reject</button>
+            <button class="approve-btn" id="approve-adoption-btn">Approve</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin-dashboard.js"></script>
+</body>
+</html>
