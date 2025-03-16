@@ -1,41 +1,45 @@
-// Sau đó gọi API để lấy dữ liệu chi tiết
-async function fetchServiceDetails() {
-    const serviceId = sessionStorage.getItem('selectedServiceId');
-    if (!serviceId) {
-        console.error('Service ID not found in URL');
-        return;
-    }
-
-    try {
-        const response = await fetch(`/service/${serviceId}`);
-        const data = await response.json();
-        const service = data.result;
-        const serviceBox = document.getElementById('service-details');
-        const serviceCard = document.createElement('div');
-        serviceCard.classList.add('service-card');
-        serviceCard.dataset.serviceId = service.id;
-        serviceCard.innerHTML = `
-            <div class="service-info">
-                <h3>${service.name}</h3>
-                <div class="service-price-section">
-                    <p class="price">$${service.price.toFixed(2)}</p>
-                    ${service.discount ? `<p class="discount">${service.discount}% OFF</p>` : ''}
-                </div>
-                <a href="/pet-care-services-profile">${service.petCareServices.name}</a>
-            </div>
-        `;
-        serviceBox.appendChild(serviceCard);
-        console.log('Service Details:', data);
-    } catch (error) {
-        console.error('Error fetching service details:', error);
-    }
-}
-
-fetchServiceDetails();
 document.addEventListener("DOMContentLoaded", function() {
+    fetchServiceDetails();
     fetchPets();
-    const petsContainer = document.getElementById('petsContainer');
-    // Hàm fetch danh sách pets
+
+    // Fetch service details
+    async function fetchServiceDetails() {
+        const serviceId = sessionStorage.getItem('selectedServiceId');
+        if (!serviceId) {
+            console.error('Service ID not found in session storage');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/service/${serviceId}`);
+            const data = await response.json();
+            if (data.code === 1000) {
+                const service = data.result;
+                renderServiceDetails(service);
+            }
+        } catch (error) {
+            console.error('Error fetching service details:', error);
+        }
+    }
+
+    // Render service details
+    function renderServiceDetails(service) {
+        const serviceBox = document.getElementById('service-details');
+        serviceBox.innerHTML = `
+                    <div class="service-card">
+                        <div class="service-info">
+                            <h3>${service.name}</h3>
+                            <div class="service-price-section">
+                                <p class="price">$${service.price.toFixed(2)}</p>
+                                ${service.discount ? `<p class="discount">${service.discount}% OFF</p>` : ''}
+                            </div>
+                            <a href="/pet-care-services-profile">${service.petCareServices.name}</a>
+                        </div>
+                    </div>
+                `;
+    }
+
+    // Fetch user's pets
     function fetchPets() {
         fetch('/pet/my-pets', {
             method: 'GET',
@@ -52,35 +56,40 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    let petId = null
-    // Hàm render danh sách pet vào grid
+    let petId = null;
+
+    // Render pet list
     function renderPets(pets) {
+        const petsContainer = document.getElementById('petsContainer');
         if (!petsContainer) return;
-        petsContainer.innerHTML = ''; // Xóa nội dung cũ
+
+        petsContainer.innerHTML = ''; // Clear container
+
         pets.forEach(pet => {
             const petCard = document.createElement('div');
             petCard.classList.add('pet-card');
             petCard.dataset.petId = pet.id;
 
-            // Tạo phần ảnh
+            // Create pet image
             const petImage = document.createElement('div');
             petImage.classList.add('pet-image');
             const img = document.createElement('img');
-            img.src = pet.avatar || '/images/default-pet.png';
+            img.src = pet.avatar || '/placeholder.svg';
             img.alt = pet.name || 'Unknown Pet';
             petImage.appendChild(img);
 
-            // Tạo phần thông tin
+            // Create pet info
             const petInfo = document.createElement('div');
             petInfo.classList.add('pet-info');
             const petName = document.createElement('h3');
             petName.textContent = pet.name || 'No Name';
             petInfo.appendChild(petName);
 
-            // Ghép các phần lại với nhau
+            // Assemble the card
             petCard.appendChild(petImage);
             petCard.appendChild(petInfo);
 
+            // Add click event for selection
             petCard.addEventListener('click', function() {
                 petId = pet.id;
                 selectPet(petCard);
@@ -90,39 +99,57 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Handle pet selection
     function selectPet(element) {
-        // Remove selected class from all pet cards
         document.querySelectorAll('.pet-card').forEach(card => {
             card.classList.remove('selected');
         });
-        // Add selected class to clicked card
         element.classList.add('selected');
     }
 
-    document.getElementById('bookingForm').addEventListener('submit', async function (e) {
+    // Form submission
+    document.getElementById('bookingForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+
+        if (!petId) {
+            alert('Please select a pet');
+            return;
+        }
+
         const bookingData = {
             preferredDateTime: document.getElementById('datetime').value,
             idPet: petId,
             specialNotes: document.getElementById('notes').value
         }
+
         const serviceId = sessionStorage.getItem('selectedServiceId');
-        const response = await fetch(`/appointment/${serviceId}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(bookingData)
-        });
-        console.log(response);
-        const result = await response.json();
-        if (result.code === 1000) {
-            alert('Booking submitted successfully!');
-            window.location.href = '/pet-services';
-        } else {
-            alert('Failed to book service');
+
+        try {
+            const response = await fetch(`/appointment/${serviceId}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(bookingData)
+            });
+
+            const result = await response.json();
+
+            if (result.code === 1000) {
+                alert('Booking submitted successfully!');
+                window.location.href = '/pet-services';
+            } else {
+                alert('Failed to book service');
+            }
+        } catch (error) {
+            console.error('Error booking service:', error);
+            alert('An error occurred. Please try again.');
         }
     });
-    // Set minimum date to today
-    const dateInput = document.getElementById('date');
-    dateInput.min = new Date().toISOString().split('T')[0];
-    fetchPets();
+
+    // Set min date to today for datetime
+    const datetimeInput = document.getElementById('datetime');
+    if (datetimeInput) {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        datetimeInput.min = now.toISOString().slice(0, 16);
+    }
 });

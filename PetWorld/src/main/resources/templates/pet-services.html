@@ -141,24 +141,18 @@
     <main class="content">
         <div class="content-header">
             <h1>Services</h1>
-            <div class="notification-container">
-                <div class="notification-bell" id="notificationBell">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-count" id="notificationCount">0</span>
-                </div>
-            </div>
         </div>
 
         <!-- Pet Care Centers Section -->
         <section class="centers-section">
             <div class="section-header">
                 <h2>Pet Care Services Center</h2>
-                <button class="view-all-btn">
-                    <span>View All</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                </button>
+                <div class="notification-container">
+                    <div class="notification-bell" id="notificationBell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count" id="notificationCount">0</span>
+                    </div>
+                </div>
             </div>
 
             <div class="centers-scroll">
@@ -186,12 +180,6 @@
         <section class="services-section">
             <div class="section-header">
                 <h2>Services</h2>
-                <button class="view-all-btn">
-                    <span>View All</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                </button>
             </div>
 
             <div class="services-grid" id="servicesGrid">
@@ -213,34 +201,114 @@
                     </div>
                 </div>
             </div>
-            <!-- Service Details Modal -->
-            <div class="modal" id="serviceDetailsModal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Service Details</h2>
-                        <button class="close-modal" id="closeServiceDetailsModal">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="service-details">
-                            <div class="service-info">
-                                <h3 id="detailsServiceName"></h3>
-                                <div class="service-price-section">
-                                    <p id="detailsServicePrice" class="price"></p>
-                                    <p id="detailsServiceDiscount" class="discount"></p>
-                                </div>
-                                <p id="detailsServiceDescription"></p>
+        </section>
+
+        <!-- Service Details Modal -->
+        <div class="modal" id="serviceDetailsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Service Details</h2>
+                    <button class="close-modal" id="closeServiceDetailsModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="service-details">
+                        <div class="service-info">
+                            <h3 id="detailsServiceName"></h3>
+                            <div class="service-price-section">
+                                <p id="detailsServicePrice" class="price"></p>
+                                <p id="detailsServiceDiscount" class="discount"></p>
+                            </div>
+                            <div class="used-count">
+                                <i class="fas fa-chart-bar"></i> <p id="detailsServiceUsedCount"></p>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="bookingBtn" class="booking-btn">Book Service</button>
+                </div>
+            </div>
+        </div>
+        <!-- Pet Details Modal -->
+        <div class="modal" id="petDetailsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Pet Details</h2>
+                    <button class="close-modal" id="closePetDetailsModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="pet-profile-header">
+                        <div class="pet-avatar">
+                            <img id="detailsPetImage" src="" alt="Pet">
+                        </div>
+                        <div class="pet-profile-info">
+                            <h3 id="detailsPetName"></h3>
+                            <p id="detailsPetBreed" class="pet-breed"></p>
+                        </div>
+                    </div>
+
+                    <div class="pet-details-grid">
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Date of Birth</span>
+                                <span id="detailsPetDob" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-venus-mars"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Gender</span>
+                                <span id="detailsPetGender" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-weight"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Weight</span>
+                                <span id="detailsPetWeight" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-paw"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Species</span>
+                                <span id="detailsPetSpecies" class="detail-value"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="health-status">
+                        <h3>Health Status</h3>
+                        <div class="health-badges">
+                            <div class="health-badge" id="neuteredBadge">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="is_neutered"></span>
+                            </div>
+                            <div class="health-badge" id="vaccinatedBadge">
+                                <i class="fas fa-syringe"></i>
+                                <span id="is_vaccinated"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pet-gallery-container">
+                        <h3>Photo Gallery</h3>
+                        <div id="petGallery" class="pet-gallery"></div>
+                    </div>
+
                     <div class="modal-footer">
-                        <button id="bookingBtn" class="booking-btn">Booking Service</button>
+                        <button id="switchRoleBtn" class="switch-role-btn">
+                            <i class="fas fa-exchange-alt"></i> Switch to Pet Role
+                        </button>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 </div>
-
 <div class="notifications-dropdown" id="notificationsDropdown">
     <div class="notification-header">
         <span>Notifications</span>
@@ -253,6 +321,9 @@
         </div>
     </div>
 </div>
+
+<script>
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/js/pet-services.js"></script>

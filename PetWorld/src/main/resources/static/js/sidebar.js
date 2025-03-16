@@ -56,3 +56,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+// Logout button functionality
+document.getElementById('logoutBtn').addEventListener('click', function () {
+    fetch('/api/auth/log-out', {
+        method: 'POST',
+        credentials: 'include', // Quan trọng: gửi cookie JWT kèm request
+    })
+        .then(response => {
+            if (response.ok) {
+                alert("Logout thành công!");
+                window.location.href = "/"; // Quay về trang chính
+            } else {
+                alert("Logout thất bại!");
+            }
+        })
+        .catch(error => console.error("Logout failed:", error));
+});

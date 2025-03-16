@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="material-symbols-outlined">edit</span>
                         </button>
                     ` : ''}
-                    <button class="action-btn view" onclick="event.stopPropagation()">
-                        <span class="material-symbols-outlined">visibility</span>
+                    <button class="action-btn delete" onclick="event.stopPropagation()">
+                        <span class="material-symbols-outlined">delete</span>
                     </button>
                 </div>
             </div>
