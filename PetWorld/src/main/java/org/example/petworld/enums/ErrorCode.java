@@ -33,7 +33,8 @@ public enum ErrorCode {
     PERMISSION_NOT_FOUND(1019, "Permission not found", HttpStatus.NOT_FOUND),
     FILE_UPLOAD_ERROR(1020, "Cannot upload file", HttpStatus.BAD_REQUEST),
     COOKIE_NOT_FOUND(1021, "Cannot find cookie", HttpStatus.NOT_FOUND),
-    NOTIFICATION_NOT_FOUND(1022, "Cannot find notification", HttpStatus.NOT_FOUND);
+    NOTIFICATION_NOT_FOUND(1022, "Cannot find notification", HttpStatus.NOT_FOUND),
+    SEND_REMINDER_ERROR(1023, "Cannot send email reminder", HttpStatus.BAD_REQUEST);
 
     int code;
     String message;

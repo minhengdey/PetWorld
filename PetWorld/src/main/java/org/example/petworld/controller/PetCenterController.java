@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@PreAuthorize("hasRole('PET_CENTER')")
 @RestController
 @RequestMapping(value = "/pet-center")
 @RequiredArgsConstructor
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class PetCenterController {
     PetCenterService petCenterService;
 
+    @PreAuthorize("hasRole('PET_CENTER')")
     @PostAuthorize("#id.toString() == authentication.token.claims['sub']")
     @PutMapping(value = "/{id}")
     public ApiResponse<PetCenterResponse> update (@RequestBody @Valid PetCenterRequest request, @PathVariable Long id) {
@@ -29,7 +29,6 @@ public class PetCenterController {
                 .build();
     }
 
-    @PostAuthorize("#id.toString() == authentication.token.claims['sub']")
     @GetMapping(value = "/{id}")
     public ApiResponse<PetCenterResponse> findUserById (@PathVariable Long id) {
         return ApiResponse.<PetCenterResponse>builder()
@@ -38,6 +37,7 @@ public class PetCenterController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('PET_CENTER')")
     @PostAuthorize("#id.toString() == authentication.token.claims['sub']")
     @DeleteMapping(value = "/{id}")
     public void deleteById (@PathVariable Long id) {

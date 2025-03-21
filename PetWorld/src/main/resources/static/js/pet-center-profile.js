@@ -1,16 +1,35 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Fetch user info
-    fetch('/api/auth/myInfo', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.code === 1000) {
+    async function fetchUserInfo() {
+        try {
+            // Fetch user info
+            const response = await fetch('/api/auth/myInfo', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
 
-                const center = data.result;
+            if (data.code === 1000) {
+                let center = data.result;
+
+                // Nếu role không phải PET_CENTER, lấy thông tin từ pet-center
+                if (center.role !== 'PET_CENTER') {
+                    const centerId = sessionStorage.getItem('petCenterId');
+                    console.log(centerId);
+
+                    const centerResponse = await fetch(`/pet-center/${centerId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const centerData = await centerResponse.json();
+
+                    if (centerData.code === 1000) {
+                        center = centerData.result;
+                    }
+                }
 
                 // Update profile information
                 document.getElementById('center-name').textContent = center.name;
@@ -27,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Load pets grid
                 const petsGrid = document.getElementById('pets-grid');
+                petsGrid.innerHTML = ''; // Xóa dữ liệu cũ tránh trùng lặp
                 if (center.petsAvailable && center.petsAvailable.length > 0) {
                     center.petsAvailable.forEach(pet => {
                         const petCard = createPetCard(pet);
@@ -34,10 +54,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.error("Error fetching data:", error);
-        });
+        }
+    }
+
+// Gọi hàm fetchUserInfo
+    fetchUserInfo();
 
     function createPetCard(pet) {
         const div = document.createElement('div');

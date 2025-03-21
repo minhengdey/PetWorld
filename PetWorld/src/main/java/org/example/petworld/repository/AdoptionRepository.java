@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface AdoptionRepository extends JpaRepository<AdoptionEntity, Long> {
-    Optional<AdoptionEntity> findByIdAndIsDeleted (Long id, boolean isDeleted);
+    Optional<AdoptionEntity> findByIdAndIsDeleted (Long id, Boolean isDeleted);
 }

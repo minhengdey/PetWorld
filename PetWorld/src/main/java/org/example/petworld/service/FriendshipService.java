@@ -18,6 +18,7 @@ import org.example.petworld.repository.PetRepository;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -58,7 +59,7 @@ public class FriendshipService {
     }
 
     public FriendshipResponse updateFriendship(FriendshipRequest request, Long id) {
-        FriendshipEntity friendship = friendshipRepository.findByIdAndAndIsDeleted(id, false)
+        FriendshipEntity friendship = friendshipRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new AppException(ErrorCode.FRIENDSHIP_NOT_FOUND));
         friendshipMapper.update(friendship, request);
         assert friendship != null;

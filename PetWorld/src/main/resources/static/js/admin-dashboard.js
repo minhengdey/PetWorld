@@ -409,7 +409,7 @@ async function loadPets() {
                         <tr>
                             <td>${pet.id}</td>
                             <td>${pet.name}</td>
-                            <td>${pet.petOwner ? pet.petOwner.name : 'N/A'}</td>
+                            <td>${pet.petOwner ? pet.petOwner.name : pet.petCenter.name}</td>
                             <td>${pet.species}</td>
                             <td>${pet.breed}</td>
                             <td>

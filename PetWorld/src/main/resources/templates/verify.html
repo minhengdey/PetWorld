@@ -97,6 +97,7 @@
             body: JSON.stringify(userData.email)
         })
             .then(otp => otp.json());
+        console.log(otp);
 
         form.addEventListener("submit", async function (event) {
             event.preventDefault();

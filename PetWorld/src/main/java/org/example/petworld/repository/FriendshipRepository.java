@@ -12,5 +12,5 @@ public interface FriendshipRepository extends JpaRepository<FriendshipEntity, Lo
     boolean existsByPet1IdAndPet2IdAndIsDeleted (Long pet1Id, Long pet2Id, Boolean isDeleted);
     Optional<FriendshipEntity> findByPet1IdAndPet2IdAndIsDeleted (Long pet1Id, Long pet2Id, Boolean isDeleted);
     List<FriendshipEntity> findAllByIsDeletedAndIsAccepted (Boolean isDeleted, Boolean isAccepted);
-    Optional<FriendshipEntity> findByIdAndAndIsDeleted (Long id, Boolean isDeleted);
+    Optional<FriendshipEntity> findByIdAndIsDeleted (Long id, Boolean isDeleted);
 }

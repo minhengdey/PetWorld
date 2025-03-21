@@ -60,7 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const petBreed = document.createElement('p');
             petBreed.textContent = pet.breed || 'Unknown Breed';
             const petCenter = document.createElement('a');
-            petCenter.href = '/pet-center-profile';  // Đường dẫn muốn mở
+            petCenter.addEventListener('click', () => {
+                sessionStorage.setItem('petCenterId', pet.petCenter.id);
+                window.location.href = '/pet-center-profile';
+            });
             petCenter.textContent = pet.petCenter.name; // Nội dung hiển thị
 
             petInfo.appendChild(petName);

@@ -16,6 +16,9 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .edit-profile-header {
             text-align: center;
@@ -245,7 +248,7 @@
     </style>
 </head>
 <body>
-<div class="layout">
+<div>
     <main>
         <div class="edit-profile-container">
             <div class="edit-profile-header">
@@ -256,7 +259,7 @@
                 <!-- Avatar Section -->
                 <div class="avatar-section">
                     <div class="avatar-preview">
-                        <img id="avatar-preview-img" src="/images/default-pet.jpg" alt="Pet Avatar">
+                        <img id="avatar-preview-img" src="/images/default-avatar.png" alt="Pet Avatar">
                         <div class="avatar-overlay">
                             <span class="material-symbols-outlined">photo_camera</span>
                         </div>
@@ -334,7 +337,7 @@
                         <!-- Gallery images will be added here dynamically -->
                     </div>
                     <input type="file" id="gallery-input" class="gallery-input" accept="image/*" multiple>
-                    <label for="gallery-input" class="gallery-upload">
+                    <label for="gallery-input">
                         <span class="material-symbols-outlined">add_photo_alternate</span>
                         <span>Click to add photos</span>
                     </label>
@@ -420,6 +423,7 @@
             galleryPreview.appendChild(galleryItem);
         }
 
+        let galleryPet;
         // Function to load pet data from API
         function loadPetData() {
             const petId = sessionStorage.getItem('selectedPetId');
@@ -451,6 +455,7 @@
                         document.getElementById('is-neutered').checked = pet.isNeutered || false;
                         document.getElementById('is-vaccinated').checked = pet.isVaccinated || false;
 
+                        galleryPet = pet.gallery;
                         // Set avatar preview
                         if (pet.avatar) {
                             document.getElementById('avatar-preview-img').src = pet.avatar;
@@ -498,6 +503,9 @@
                 avatar = avatarData.result;
             }
             let galleryUrls = [];
+            for (let i of galleryPet) {
+                galleryUrls.push(i);
+            }
             // Add gallery images
             const galleryInput = document.getElementById('gallery-input');
             if (galleryInput.files) {
