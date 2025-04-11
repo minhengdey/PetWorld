@@ -155,4 +155,9 @@ public class ScreenController {
     public String adminDashboard () {
         return "admin-dashboard";
     }
+
+    @GetMapping(value = "/calendar-request")
+    public String calendarRequest () {
+        return "calendar-request";
+    }
 }

@@ -49,12 +49,18 @@ public class FriendshipService {
         friendship.setIsAccepted(false);
         pet1.getFriendRequestSent().add(friendship);
         pet2.getFriendRequest().add(friendship);
-        NotificationRequest notificationRequest = NotificationRequest.builder()
+        NotificationRequest notificationPet = NotificationRequest.builder()
                 .user(pet2)
                 .message(pet1.getName() + " has sent you a friend request.")
                 .path("http://localhost:8080/friend-requests")
                 .build();
-        notificationService.sendNotification(notificationRequest);
+        notificationService.sendNotification(notificationPet);
+        NotificationRequest notificationPetOwner = NotificationRequest.builder()
+                .user(pet2.getPetOwner())
+                .message(pet2.getName() + ": Your pet has a new friend request.")
+                .path("http://localhost:8080/friend-requests")
+                .build();
+        notificationService.sendNotification(notificationPetOwner);
         return friendshipMapper.toResponse(friendshipRepository.save(friendship));
     }
 
@@ -67,12 +73,18 @@ public class FriendshipService {
             friendship.setIsDeleted(true);
             friendship.setDeletedAt(new Date());
         } else {
-            NotificationRequest notificationRequest = NotificationRequest.builder()
+            NotificationRequest notificationPet = NotificationRequest.builder()
                     .user(friendship.getPet1())
                     .message(friendship.getPet2().getName() + " has accepted your friend request.")
                     .path("http://localhost:8080/friends")
                     .build();
-            notificationService.sendNotification(notificationRequest);
+            notificationService.sendNotification(notificationPet);
+            NotificationRequest notificationPetOwner = NotificationRequest.builder()
+                    .user(friendship.getPet1().getPetOwner())
+                    .message(friendship.getPet1().getName() + ": Your friend request has been accepted by " + friendship.getPet2().getName() + ".")
+                    .path("http://localhost:8080/friends")
+                    .build();
+            notificationService.sendNotification(notificationPetOwner);
         }
         friendship.setUpdatedAt(new Date());
         return friendshipMapper.toResponse(friendshipRepository.save(friendship));

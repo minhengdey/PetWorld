@@ -36,7 +36,6 @@ public class AppointmentService {
         PetEntity pet = petRepository.findByIdAndIsDeleted(request.getIdPet(), false)
                 .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND));
         AppointmentEntity appointment = appointmentMapper.toEntity(request);
-        service.setUsedCount(service.getUsedCount() + 1);
         appointment.setStatus("Pending");
         appointment.setCreatedAt(new Date());
         appointment.setIsDeleted(false);
@@ -105,6 +104,9 @@ public class AppointmentService {
                 .orElseThrow(() -> new AppException(ErrorCode.APPOINTMENT_NOT_FOUND));
         appointmentMapper.update(appointment, request);
         appointment.setUpdatedAt(new Date());
+        if (appointment.getStatus().equals("Accepted")) {
+            appointment.getService().setUsedCount(appointment.getService().getUsedCount() + 1);
+        }
         NotificationRequest notificationRequest = NotificationRequest.builder()
                 .user(appointment.getPet().getPetOwner())
                 .message("The appointment for your pet " + appointment.getPet().getName() + " has been updated.")

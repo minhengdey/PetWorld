@@ -14,4 +14,6 @@ public class ServiceRequest {
     Integer price;
 
     String discount;
+
+    Integer durationTime;
 }

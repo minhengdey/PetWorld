@@ -14,11 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.code === 1000) {
                     const requestedPets = data.result.filter(req => req.status === 'Pending').map(request => request.pet);
-                    const adoptedPets = data.result.filter(req => req.status === 'Approved').map(request => request.pet);
                     document.querySelector('[data-tab="requested"] .tab-badge').textContent = requestedPets.length;
-                    document.querySelector('[data-tab="approved"] .tab-badge').textContent = adoptedPets.length;
                     renderPets('requested', requestedPets);
-                    renderPets('approved', adoptedPets);
                 }
             })
             .catch(error => console.error("Error fetching adoption requests:", error));
@@ -82,38 +79,193 @@ document.addEventListener('DOMContentLoaded', function() {
     function getEmptyStateMessage(tabId) {
         switch(tabId) {
             case 'requested': return "You haven't requested to adopt any pets yet.";
-            case 'approved': return "You haven't successfully adopted any pets yet.";
             case 'available': return "There are no pets available for adoption at the moment.";
             default: return "No pets found.";
         }
     }
 
     function showPetDetails(pet) {
+        // Set the pet image and basic info
         document.getElementById('detailsPetImage').src = pet.avatar || '/images/default-pet.png';
         document.getElementById('detailsPetName').textContent = pet.name || 'No Name';
-        document.getElementById('detailsPetBreed').textContent = "Breed: " + (pet.breed || 'Unknown');
-        document.getElementById('detailsPetDob').textContent = "Date of Birth: " + (pet.dob || 'N/A');
-        document.getElementById('detailsPetGender').textContent = "Gender: " + (pet.gender || 'N/A');
-        document.getElementById('detailsPetWeight').textContent = "Weight: " + (pet.weight ? pet.weight + " kg" : 'N/A');
-        document.getElementById('detailsPetSpecies').textContent = "Species: " + (pet.species || 'N/A');
-        document.getElementById('is_neutered').textContent = pet.isNeutered ? "This pet has been neutered/spayed." : "This pet has not been neutered/spayed.";
-        document.getElementById('is_vaccinated').textContent = pet.isVaccinated ? "This pet has been vaccinated." : "This pet has not been vaccinated.";
+        document.getElementById('detailsPetBreed').textContent = pet.breed || 'Unknown';
 
+        // Set the detailed information
+        document.getElementById('detailsPetDob').textContent = formatDate(pet.dob) || 'N/A';
+        document.getElementById('detailsPetGender').textContent = formatGender(pet.gender) || 'N/A';
+        document.getElementById('detailsPetWeight').textContent = pet.weight ? `${pet.weight} kg` : 'N/A';
+        document.getElementById('detailsPetSpecies').textContent = pet.species || 'N/A';
+
+        // Update neutered status
+        const neuteredBadge = document.getElementById('neuteredBadge');
+        const neuteredText = document.getElementById('is_neutered');
+        if (pet.isNeutered) {
+            neuteredBadge.classList.add('badge-success');
+            neuteredBadge.classList.remove('badge-warning');
+            neuteredText.textContent = "Neutered/Spayed";
+        } else {
+            neuteredBadge.classList.add('badge-warning');
+            neuteredBadge.classList.remove('badge-success');
+            neuteredText.textContent = "Not Neutered/Spayed";
+        }
+
+        // Update vaccinated status
+        const vaccinatedBadge = document.getElementById('vaccinatedBadge');
+        const vaccinatedText = document.getElementById('is_vaccinated');
+        if (pet.isVaccinated) {
+            vaccinatedBadge.classList.add('badge-success');
+            vaccinatedBadge.classList.remove('badge-warning');
+            vaccinatedText.textContent = "Vaccinated";
+        } else {
+            vaccinatedBadge.classList.add('badge-warning');
+            vaccinatedBadge.classList.remove('badge-success');
+            vaccinatedText.textContent = "Not Vaccinated";
+        }
+
+        // Display gallery images
         const galleryContainer = document.getElementById("petGallery");
-        galleryContainer.innerHTML = pet.gallery && pet.gallery.length > 0
-            ? pet.gallery.map(imageUrl => `<img src="${imageUrl}" alt="Pet Photo" class="pet-gallery-img">`).join('')
-            : "<p>No gallery images available</p>";
+        galleryContainer.innerHTML = ""; // Clear current content
 
+        if (pet.gallery && pet.gallery.length > 0) {
+            pet.gallery.forEach(imageUrl => {
+                const imgElement = document.createElement("img");
+                imgElement.src = imageUrl;
+                imgElement.alt = `${pet.name} Photo`;
+                imgElement.addEventListener('click', () => {
+                    openImageViewer(imageUrl);
+                });
+                galleryContainer.appendChild(imgElement);
+            });
+        } else {
+            const noImagesMsg = document.createElement("p");
+            noImagesMsg.textContent = "No gallery images available";
+            noImagesMsg.style.textAlign = "center";
+            noImagesMsg.style.padding = "2rem";
+            noImagesMsg.style.color = "var(--text-muted)";
+            galleryContainer.appendChild(noImagesMsg);
+        }
+
+        // Set up adopt button
+        const adoptPetBtn = document.getElementById('adoptPetBtn');
         if (pet.adoption === null) {
-            document.getElementById('adoptPetBtn').onclick = () => {
+            adoptPetBtn.style.display = 'flex';
+            adoptPetBtn.onclick = () => {
                 sessionStorage.setItem('selectedPetId', pet.id);
                 window.location.href = '/adoption-form';
             };
+        } else {
+            adoptPetBtn.style.display = 'none';
         }
 
+        // Show the modal
+        const petDetailsModal = document.getElementById('petDetailsModal');
+        const closePetDetailsModal = document.getElementById('closePetDetailsModal');
         petDetailsModal.style.display = 'flex';
-        closePetDetailsModal.addEventListener('click', () => petDetailsModal.style.display = 'none');
+
+        // Close modal handlers
+        closePetDetailsModal.addEventListener('click', () => {
+            petDetailsModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === petDetailsModal) {
+                petDetailsModal.style.display = 'none';
+            }
+        });
     }
+
+// Function to format date
+    function formatDate(dateString) {
+        if (!dateString) return null;
+
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        try {
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+// Function to format gender
+    function formatGender(gender) {
+        if (!gender) return null;
+
+        switch(gender.toUpperCase()) {
+            case 'MALE': return 'Male';
+            case 'FEMALE': return 'Female';
+            default: return gender;
+        }
+    }
+
+// Function to open image viewer (simplified version)
+    function openImageViewer(imageUrl) {
+        const viewer = document.createElement('div');
+        viewer.className = 'image-viewer';
+        viewer.innerHTML = `
+            <div class="image-viewer-content">
+                <button class="close-viewer">&times;</button>
+                <img src="${imageUrl}" alt="Pet Image">
+            </div>
+        `;
+        document.body.appendChild(viewer);
+
+        // Close on button click
+        viewer.querySelector('.close-viewer').addEventListener('click', () => {
+            document.body.removeChild(viewer);
+        });
+
+        // Close on outside click
+        viewer.addEventListener('click', (e) => {
+            if (e.target === viewer) {
+                document.body.removeChild(viewer);
+            }
+        });
+    }
+
+// Add some CSS for image viewer
+    document.addEventListener('DOMContentLoaded', function() {
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1200;
+        }
+        
+        .image-viewer-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .image-viewer-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        
+        .close-viewer {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    `;
+
+        document.head.appendChild(styleElement);
+    });
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -122,14 +274,5 @@ document.addEventListener('DOMContentLoaded', function() {
             tab.classList.add('active');
             document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
         });
-    });
-
-    document.getElementById('petAvatar').addEventListener('change', function(e) {
-        var file = e.target.files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = event => avatarPreview.src = event.target.result;
-            reader.readAsDataURL(file);
-        }
     });
 });

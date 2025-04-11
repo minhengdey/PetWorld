@@ -145,11 +145,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
 
-            notificationItem.addEventListener('click', function() {
+            notificationItem.addEventListener('click', async function() {
                 markAsRead(notification.id);
                 notificationItem.classList.remove('unread');
-                if (notification.path) {
-                    window.location.href = notification.path;
+                if (notification.message.includes(":")) {
+                    const chars = notification.message.split(":");
+                    try {
+                        console.log(chars[0]);
+                        let petResponse = await fetch(`/pet/${notification.user.id}/${chars[0]}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        petResponse = await petResponse.json();
+                        console.log(petResponse)
+                        if (petResponse.code === 1000) {
+                            const pet = petResponse.result;
+                            try {
+                                const response = await fetch(`/api/auth/swap/${pet.id}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+
+                                if (response.ok) {
+                                    const data = await response.json();
+                                    console.log(data);
+                                    window.location.href = notification.path;
+                                } else {
+                                    alert('Error switching roles. Please try again.');
+                                }
+                            } catch (error) {
+                                console.error('Role switch failed:', error);
+                                alert('Error switching roles. Please try again.');
+                            }
+                        } else {
+                            console.error('Error get pet');
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                } else {
+                    if (notification.path) {
+                        window.location.href = notification.path;
+                    }
                 }
             });
 

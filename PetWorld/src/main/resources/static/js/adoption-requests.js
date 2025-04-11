@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }, {});
 
         document.getElementById('pending-count').textContent = stats.Pending || 0;
-        document.getElementById('approved-count').textContent = stats.Approved || 0;
+        document.getElementById('approved-count').textContent = stats.Scheduled || 0;
         document.getElementById('rejected-count').textContent = stats.Rejected || 0;
     }
 
@@ -140,11 +140,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     </div>
     <div class="request-actions">
         ${request.status === 'Pending' ? `
-            <button class="action-btn approve" onclick="handleRequestAction('Approved', ${request.id})">
+            <button class="action-btn approve" onclick="{
+                sessionStorage.setItem('requestId', ${request.id});
+                window.location.href = '/calendar-request';
+            }">
                 <span class="material-symbols-outlined">check</span>
-                Approve
+                Schedule
             </button>
-            <button class="action-btn reject" onclick="handleRequestAction('Rejected', ${request.id})">
+            <button class="action-btn reject" onclick="handleRequestRejected(${request.id})">
                 <span class="material-symbols-outlined">close</span>
                 Reject
             </button>
@@ -160,14 +163,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 // Handle request actions
-async function handleRequestAction(action, requestId) {
+async function handleRequestRejected(requestId) {
     await fetch(`/adoption/${requestId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            status: action
+            status: "Rejected"
         })
     })
         .then(response => response.json())
@@ -177,9 +180,32 @@ async function handleRequestAction(action, requestId) {
             }
         })
         .catch(error => {
-            console.error(`Error ${action}ing request:`, error);
+            console.error(`Error rejecting request:`, error);
         });
 }
+
+window.addEventListener("popstate", async function () {
+    const requestId = sessionStorage.getItem('requestId');
+    await fetch('/adoption/requestId', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            status: "Scheduled",
+            nextMeetingDate: sessionStorage.getItem('dateTimeSelected')
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.code === 1000) {
+                location.reload(); // Refresh the page to show updated status
+            }
+        })
+        .catch(error => {
+            console.error(`Error schedule request:`, error);
+        });
+});
 
 // View request details
 function viewRequestDetails(requestId) {

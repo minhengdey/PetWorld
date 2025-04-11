@@ -69,6 +69,15 @@ public class PetController {
         throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
 
+    @GetMapping(value = "/{pet_owner_id}/{pet_name}")
+    @PreAuthorize("hasRole('PET_OWNER')")
+    public ApiResponse<PetResponse> getPetByName (@PathVariable("pet_owner_id") Long petOwnerId, @PathVariable("pet_name") String petName) {
+        return ApiResponse.<PetResponse>builder()
+                .code(1000)
+                .result(petService.getPetByName(petOwnerId, petName))
+                .build();
+    }
+
     @GetMapping(value = "/my-pets")
     @PreAuthorize("hasRole('PET_OWNER') or hasRole('PET_CENTER')")
     public ApiResponse<Set<PetResponse>> getAllByUserId () {

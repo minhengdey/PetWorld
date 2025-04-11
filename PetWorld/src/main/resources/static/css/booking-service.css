@@ -1,4 +1,8 @@
 /* Section Headers */
+* {
+    margin: 0 0 0 0;
+}
+
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -214,7 +218,7 @@ body {
 
 .service-summary {
     background: #f8fafc;
-    padding: 30px;
+    padding: 25px;
     margin-bottom: 0;
     border-bottom: 1px solid #e5e7eb;
 }
@@ -250,6 +254,9 @@ body {
 
 .service-info {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .service-info h3 {
@@ -269,16 +276,60 @@ body {
 .price {
     color: #4f46e5;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.2rem !important;
 }
 
 .discount {
-    background: #fee2e2;
     color: #ef4444;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.85rem;
     font-weight: 600;
+    background-color: #fee2e2;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem !important;
+}
+
+.provider {
+    color: #666;
+    margin-top: 12px !important;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.provider:before {
+    content: '🏥';
+    margin-right: 6px;
+}
+
+.used-count {
+    color: #666;
+    margin-top: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.used-count i {
+    margin-right: 6px;
+    color: #007bff;
+}
+
+.duration-time {
+    color: #666;
+    margin-top: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.duration-time i {
+    margin-right: 6px;
+    color: #16a34a;
+}
+
+.duration-time p {
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .service-info a {
@@ -311,16 +362,23 @@ label {
     font-size: 0.95rem;
 }
 
+input[type="datetime-local"] {
+    padding: 14px;
+}
+
+
 input[type="datetime-local"],
 textarea {
-    width: 100%;
-    padding: 14px;
     border: 1px solid #d1d5db;
     border-radius: 10px;
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     background-color: #f9fafb;
     transition: all 0.3s ease;
+}
+
+textarea {
+    width: 100%;
 }
 
 input[type="datetime-local"]:focus,

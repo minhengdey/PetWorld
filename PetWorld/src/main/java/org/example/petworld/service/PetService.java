@@ -76,6 +76,14 @@ public class PetService {
                         new AppException(ErrorCode.PET_NOT_FOUND)));
     }
 
+    public PetResponse getPetByName(Long petOwnerId, String petName) {
+        PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(petOwnerId, false)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        PetEntity pet = petRepository.findByNameAndPetOwnerIdAndIsDeleted(petName, petOwner.getId(), false)
+                .orElseThrow(() -> new AppException(ErrorCode.PET_NOT_FOUND));
+        return petMapper.toPetResponse(pet);
+    }
+
     public Set<PetResponse> getAllPetByPetOwnerId(Long userId) {
         PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(userId, false)
                 .orElseThrow(() ->

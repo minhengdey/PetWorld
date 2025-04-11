@@ -24,6 +24,8 @@ public class ServiceResponse {
 
     String discount;
 
+    Integer durationTime;
+
     Date createdAt;
 
     Date deletedAt;

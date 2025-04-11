@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 </head>
 <body>
-<div class="layout">
+<div class="layout" id="layout">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-toggle" id="sidebarToggle">
             <i class="fas fa-chevron-left"></i>
@@ -149,46 +149,94 @@
                 </div>
             </div>
         </div>
-        <div class="tabs-container">
+        <!-- Pet Details Modal -->
+        <div class="modal" id="petDetailsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Pet Details</h2>
+                    <button class="close-modal" id="closePetDetailsModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="pet-profile-header">
+                        <div class="pet-avatar">
+                            <img id="detailsPetImage" src="" alt="Pet">
+                        </div>
+                        <div class="pet-profile-info">
+                            <h3 id="detailsPetName"></h3>
+                            <p id="detailsPetBreed" class="pet-breed"></p>
+                        </div>
+                    </div>
+
+                    <div class="pet-details-grid">
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Date of Birth</span>
+                                <span id="detailsPetDob" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-venus-mars"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Gender</span>
+                                <span id="detailsPetGender" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-weight"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Weight</span>
+                                <span id="detailsPetWeight" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-icon"><i class="fas fa-paw"></i></div>
+                            <div class="detail-content">
+                                <span class="detail-label">Species</span>
+                                <span id="detailsPetSpecies" class="detail-value"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="health-status">
+                        <h3>Health Status</h3>
+                        <div class="health-badges">
+                            <div class="health-badge" id="neuteredBadge">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="is_neutered"></span>
+                            </div>
+                            <div class="health-badge" id="vaccinatedBadge">
+                                <i class="fas fa-syringe"></i>
+                                <span id="is_vaccinated"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pet-gallery-container">
+                        <h3>Photo Gallery</h3>
+                        <div id="petGallery" class="pet-gallery"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="adoptPetBtn" class="switch-role-btn">
+                            <i class="fas fa-heart"></i> Adopt This Pet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tabs-container" id="tabs-container">
             <div class="tabs">
-                <button class="tab active" data-tab="requested">
-                    Requested Pets
-                    <span class="tab-badge">0</span>
-                </button>
-                <button class="tab" data-tab="approved">
-                    Adopted Pets
-                    <span class="tab-badge">0</span>
-                </button>
                 <button class="tab" data-tab="available">
                     Available Pets
                     <span class="tab-badge">0</span>
                 </button>
-            </div>
-            <!-- Requested Pets Tab -->
-            <div class="tab-content active" id="requested">
-                <div class="pets-grid">
-                    <!-- Empty state for requested pets -->
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                        <h3>No Requested Pets</h3>
-                        <p>You haven't requested to adopt any pets yet.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Adopted Pets Tab -->
-            <div class="tab-content" id="approved">
-                <div class="pets-grid">
-                    <!-- Empty state for adopted pets -->
-                    <div class="empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3>No Adopted Pets</h3>
-                        <p>You haven't successfully adopted any pets yet.</p>
-                    </div>
-                </div>
+                <button class="tab active" data-tab="requested">
+                    Requested Pets
+                    <span class="tab-badge">0</span>
+                </button>
             </div>
             <!-- Available Pets Tab -->
             <div class="tab-content" id="available">
@@ -203,43 +251,22 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="pets-grid" id="petsContainer">
-            <!-- Pet cards will be dynamically inserted here -->
-        </div>
-
-        <!-- Pet Details Modal -->
-        <div class="modal" id="petDetailsModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Pet Details</h2>
-                    <button class="close-modal" id="closePetDetailsModal">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="pet-details">
-                        <div class="pet-image">
-                            <img id="detailsPetImage" src="" alt="Pet">
-                        </div>
-                        <div class="pet-info">
-                            <h3 id="detailsPetName"></h3>
-                            <p id="detailsPetBreed"></p>
-                            <p id="detailsPetDob"></p>
-                            <p id="detailsPetGender"></p>
-                            <p id="detailsPetWeight"></p>
-                            <p id="detailsPetSpecies"></p>
-                            <p id="is_neutered"></p>
-                            <p id="is_vaccinated"></p>
-                        </div>
-                    </div>
-                    <div class="pet-gallery-container">
-                        <h3>Gallery</h3>
-                        <div id="petGallery" class="pet-gallery"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="adoptPetBtn" class="switch-role-btn">Adopt Pet</button>
+            <!-- Requested Pets Tab -->
+            <div class="tab-content active" id="requested">
+                <div class="pets-grid">
+                    <!-- Empty state for requested pets -->
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        </svg>
+                        <h3>No Requested Pets</h3>
+                        <p>You haven't requested to adopt any pets yet.</p>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="pets-grid" id="petsContainer">
+            <!-- Pet cards will be dynamically inserted here -->
         </div>
     </main>
 </div>

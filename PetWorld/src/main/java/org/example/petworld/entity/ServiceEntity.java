@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Setter
 @Getter
@@ -43,6 +42,9 @@ public class ServiceEntity {
 
     @Column(name = "updated_at")
     Date updatedAt;
+
+    @Column(name = "duration_time")
+    Integer durationTime;
 
     @JsonIgnore
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)

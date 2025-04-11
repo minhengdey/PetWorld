@@ -147,6 +147,7 @@ header .navbar {
 .hero-section .hero-details .button {
     padding: 10px 26px;
     display: block;
+    cursor: pointer;
     border: 2px solid transparent;
     border-radius: var(--border-radius-m);
     background: var(--secondary-color);

@@ -273,6 +273,25 @@
     color: #007bff;
 }
 
+.duration-time {
+    color: #666;
+    margin-top: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.duration-time i {
+    margin-right: 6px;
+    color: #16a34a;
+}
+
+.duration-time p {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+
 
 /* Modal Styles */
 .modal {

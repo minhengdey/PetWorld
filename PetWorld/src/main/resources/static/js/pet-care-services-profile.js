@@ -96,9 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <p class="duration">
                         <span class="material-symbols-outlined">schedule</span>
-                        ${service.duration} minutes
+                        ${service.durationTime} minutes
                     </p>
-                    <p>${service.description}</p>
                 </div>
                 <div class="service-actions">
                     <button class="edit-service-btn" data-id="${service.id}">
@@ -145,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('detailsServiceName').textContent = service.name;
         document.getElementById('detailsServicePrice').textContent = `$${service.price.toFixed(2)}`;
         document.getElementById('detailsServiceDiscount').textContent = service.discount ? `${service.discount}% OFF` : '';
+        document.getElementById('detailsServiceDurationTime').textContent = service.durationTime + " minutes";
         document.getElementById('detailsServiceUsedCount').textContent = "Used: " + service.usedCount || '0';
 
 

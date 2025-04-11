@@ -33,7 +33,15 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <p class="price">$${service.price.toFixed(2)}</p>
                                 ${service.discount ? `<p class="discount">${service.discount}% OFF</p>` : ''}
                             </div>
-                            <a href="/pet-care-services-profile">${service.petCareServices.name}</a>
+                            <a href="/pet-care-services-profile" class="provider">${service.petCareServices.name}</a>
+                            <div class="used-count">
+                                <i class="fas fa-chart-bar"></i> 
+                                <p>Used: ${service.usedCount}</p>
+                            </div>
+                            <div class="duration-time">
+                                <i class="fas fa-clock"></i> 
+                                <p>Duration: ${service.durationTime} minutes</p>
+                            </div>
                         </div>
                     </div>
                 `;

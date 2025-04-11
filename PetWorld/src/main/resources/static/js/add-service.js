@@ -9,7 +9,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const serviceData = {
             name: document.getElementById('serviceName').value,
             price: document.getElementById('servicePrice').value,
-            discount: document.getElementById('serviceDiscount').value
+            discount: document.getElementById('serviceDiscount').value,
+            durationTime: document.getElementById('serviceDurationTime').value
         };
 
         // Send service data

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar - Pet World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #818cf8;
+            --background-color: #f3f4f6;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --hover-color: #e5deff;
+            --today-color: #818cf8;
+            --selected-color: #4f46e5;
+            --selected-text: white;
+            --unavailable-color: #f3f4f6;
+            --unavailable-text: #9ca3af;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .calendar-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        .calendar-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .calendar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .calendar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        .calendar-nav button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .calendar-nav button:hover {
+            background: var(--hover-color);
+        }
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+            padding: 15px;
+        }
+        .calendar th {
+            padding: 15px 0;
+            text-align: center;
+            font-weight: 500;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        .calendar td {
+            padding: 2px;
+            text-align: center;
+        }
+        .calendar .day {
+            height: 48px;
+            width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .calendar .day:hover:not(.unavailable) {
+            background: var(--hover-color);
+        }
+        .calendar .today {
+            background: var(--today-color);
+            color: white;
+        }
+        .calendar .selected {
+            background: var(--selected-color);
+            color: var(--selected-text);
+        }
+        .calendar .unavailable {
+            background: var(--unavailable-color);
+            color: var(--unavailable-text);
+            cursor: not-allowed;
+        }
+        .selected-date-display {
+            font-size: 1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: var(--hover-color);
+        }
+        .calendar .other-month {
+            opacity: 0.4;
+        }
+        /* Time slot styles */
+        .time-slots-container {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: none; /* Ẩn cho đến khi chọn ngày */
+        }
+        .time-slots-header {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .time-slots-date {
+            color: var(--primary-color);
+        }
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .time-slot:hover:not(.unavailable) {
+            background-color: var(--hover-color);
+        }
+        .time-slot.selected {
+            background-color: var(--selected-color);
+            color: white;
+            border-color: var(--selected-color);
+        }
+        .time-slot.unavailable {
+            background-color: var(--unavailable-color);
+            color: var(--unavailable-text);
+            cursor: not-allowed;
+        }
+        .calendar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        .calendar-footer button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .today-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        .today-btn:hover {
+            background: var(--background-color);
+        }
+        .confirm-btn {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+        }
+        .confirm-btn:hover {
+            background: #4338ca;
+        }
+        .calendar-body {
+            padding: 10px;
+        }
+        /* Current time indicator */
+        .current-time {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 520px) {
+            .calendar-container {
+                max-width: 100%;
+            }
+            .calendar .day {
+                height: 40px;
+                width: 40px;
+                font-size: 0.85rem;
+            }
+            .calendar th {
+                padding: 10px 0;
+                font-size: 0.8rem;
+            }
+            .time-slots-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="calendar-container">
+    <div class="calendar-header">
+        <h1>Select Date & Time</h1>
+        <p>Choose a date and time for your appointment</p>
+        <div class="current-time" id="currentTime"></div>
+    </div>
+    <div class="calendar-controls">
+        <div class="calendar-title" id="calendarMonth"></div>
+        <div class="calendar-nav">
+            <button type="button" class="prev-month">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button type="button" class="next-month">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <!-- Hiển thị ngày đã chọn -->
+    <div id="selectedDateDisplay" class="selected-date-display" style="display: none;"></div>
+    <div class="calendar-body">
+        <table class="calendar">
+            <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+            </thead>
+            <tbody id="calendarBody">
+            <!-- Lịch sẽ được tạo bằng JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    <!-- Phần chọn khung giờ -->
+    <div class="time-slots-container" id="timeSlotsContainer">
+        <div class="time-slots-header">
+            <span>Available Times</span>
+            <span class="time-slots-date" id="selectedDate"></span>
+        </div>
+        <div class="time-slots-grid" id="timeSlotsGrid">
+            <!-- Khung giờ được tạo bằng JavaScript -->
+        </div>
+    </div>
+    <div class="calendar-footer">
+        <button type="button" class="today-btn">Today</button>
+        <button type="button" class="confirm-btn">Confirm Date & Time</button>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy các phần tử cần thiết
+        const calendarTitle = document.getElementById("calendarMonth");
+        const calendarBody = document.getElementById("calendarBody");
+        const timeSlotsContainer = document.getElementById("timeSlotsContainer");
+        const selectedDateEl = document.getElementById("selectedDate");
+        const selectedDateDisplay = document.getElementById("selectedDateDisplay");
+        const timeSlotsGrid = document.getElementById("timeSlotsGrid");
+        const todayBtn = document.querySelector(".today-btn");
+        const prevMonthBtn = document.querySelector(".prev-month");
+        const nextMonthBtn = document.querySelector(".next-month");
+        const confirmBtn = document.querySelector(".confirm-btn");
+        const currentTimeEl = document.getElementById("currentTime");
+
+        // Theo dõi ngày/tháng
+        const currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        let selectedDay = null;
+        let selectedTimeSlot = null;
+
+        // Cập nhật thời gian hiện tại
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true,
+            };
+            currentTimeEl.textContent = `Current time: ${now.toLocaleTimeString(undefined, options)}`;
+        }
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+
+        // Cập nhật tiêu đề lịch
+        function updateCalendarTitle() {
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December",
+            ];
+            calendarTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+        }
+
+        // Tạo lịch cho tháng hiện tại (cho phép chọn ngày hôm nay và các ngày tương lai)
+        function generateCalendar() {
+            calendarBody.innerHTML = "";
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            let startingDay = firstDay.getDay();
+            let monthDays = lastDay.getDate();
+            const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
+            const rows = Math.ceil((startingDay + monthDays) / 7);
+
+            // Lấy ngày hôm nay
+            const today = new Date();
+            const todayDate = today.getDate();
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+
+            let date = 1;
+            for (let i = 0; i < rows; i++) {
+                const row = document.createElement("tr");
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement("td");
+                    const dayDiv = document.createElement("div");
+                    dayDiv.classList.add("day");
+
+                    // Các ô của tháng trước
+                    if (i === 0 && j < startingDay) {
+                        const prevDate = prevMonthLastDay - startingDay + j + 1;
+                        dayDiv.textContent = prevDate;
+                        dayDiv.classList.add("other-month");
+                    }
+                    // Các ô của tháng sau
+                    else if (date > monthDays) {
+                        dayDiv.textContent = date - monthDays;
+                        dayDiv.classList.add("other-month");
+                        date++;
+                    }
+                    // Các ngày thuộc tháng hiện tại
+                    else {
+                        dayDiv.textContent = date;
+                        const cellDate = new Date(currentYear, currentMonth, date);
+                        // Cho phép chọn nếu ngày >= ngày hôm nay
+                        if (cellDate >= new Date(todayYear, todayMonth, todayDate)) {
+                            dayDiv.addEventListener("click", function () {
+                                selectDay(date);
+                            });
+                        } else {
+                            dayDiv.classList.add("unavailable");
+                        }
+                        // Nếu ngày đang được chọn thì hiển thị highlight
+                        if (selectedDay === date) {
+                            dayDiv.classList.add("selected");
+                        }
+                        date++;
+                    }
+
+                    cell.appendChild(dayDiv);
+                    row.appendChild(cell);
+                }
+                calendarBody.appendChild(row);
+            }
+        }
+
+        // Hàm định dạng ngày hiển thị
+        function formatDate(date) {
+            const dayNames = [
+                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+            ];
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December",
+            ];
+            const dayName = dayNames[date.getDay()];
+            const day = date.getDate();
+            const month = monthNames[date.getMonth()];
+            const year = date.getFullYear();
+            return `${dayName}, ${month} ${day}, ${year}`;
+        }
+
+        // Xử lý chọn ngày (cho phép chọn ngày hôm nay và tương lai)
+        function selectDay(day) {
+            // Xóa highlight khỏi tất cả các ô ngày
+            document.querySelectorAll(".day").forEach(function (cell) {
+                cell.classList.remove("selected");
+            });
+            // Chỉ thêm highlight cho các ô của tháng hiện tại (không có class "other-month") nếu nội dung khớp
+            document.querySelectorAll(".day:not(.other-month)").forEach(function (cell) {
+                if (parseInt(cell.textContent.trim(), 10) === day) {
+                    cell.classList.add("selected");
+                }
+            });
+
+            selectedDay = day;
+            const selectedDateObj = new Date(currentYear, currentMonth, selectedDay);
+            const formattedDate = formatDate(selectedDateObj);
+
+            // Cập nhật hiển thị ngày
+            selectedDateEl.textContent = formattedDate;
+            selectedDateDisplay.textContent = formattedDate;
+            selectedDateDisplay.style.display = "block";
+
+            // Sinh khung giờ cho ngày đã chọn
+            generateTimeSlots(selectedDateObj);
+            timeSlotsContainer.style.display = "block";
+        }
+
+        // Sinh khung giờ cho ngày đã chọn (từ 7AM đến 9PM, cách nhau 30 phút)
+        function generateTimeSlots(selectedDate) {
+            timeSlotsGrid.innerHTML = "";
+            const now = new Date();
+            const sameDay =
+                selectedDate.getDate() === now.getDate() &&
+                selectedDate.getMonth() === now.getMonth() &&
+                selectedDate.getFullYear() === now.getFullYear();
+            const startHour = 7;
+            const endHour = 21;
+            const interval = 30;
+            for (let hour = startHour; hour <= endHour; hour++) {
+                for (let min = 0; min < 60; min += interval) {
+                    if (hour === endHour && min > 0) continue;
+                    const timeSlot = document.createElement("div");
+                    timeSlot.classList.add("time-slot");
+                    const timeObj = new Date(selectedDate);
+                    timeObj.setHours(hour, min, 0);
+                    const formattedTime = timeObj.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    });
+                    timeSlot.textContent = formattedTime;
+                    // Nếu khung giờ đã qua trong ngày hiện tại, đánh dấu không khả dụng
+                    if (sameDay && timeObj < now) {
+                        timeSlot.classList.add("unavailable");
+                    } else {
+                        timeSlot.addEventListener("click", function () {
+                            selectTimeSlot(this);
+                        });
+                    }
+                    timeSlotsGrid.appendChild(timeSlot);
+                }
+            }
+        }
+
+        // Xử lý chọn khung giờ
+        function selectTimeSlot(slot) {
+            document.querySelectorAll(".time-slot").forEach(function (s) {
+                s.classList.remove("selected");
+            });
+            slot.classList.add("selected");
+            selectedTimeSlot = slot.textContent;
+        }
+
+        // Nút "Today": chuyển về tháng hiện tại và tự động chọn ngày hôm nay (nếu hôm nay được phép chọn)
+        todayBtn.addEventListener("click", function () {
+            const today = new Date();
+            currentMonth = today.getMonth();
+            currentYear = today.getFullYear();
+            selectedDay = today.getDate();
+            updateCalendarTitle();
+            generateCalendar();
+            selectDay(selectedDay);
+        });
+
+        // Nút chuyển về tháng trước
+        prevMonthBtn.addEventListener("click", function () {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateCalendarTitle();
+            generateCalendar();
+            timeSlotsContainer.style.display = "none";
+            selectedDateDisplay.style.display = "none";
+            selectedDay = null;
+            selectedTimeSlot = null;
+        });
+
+        // Nút chuyển về tháng sau
+        nextMonthBtn.addEventListener("click", function () {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateCalendarTitle();
+            generateCalendar();
+            timeSlotsContainer.style.display = "none";
+            selectedDateDisplay.style.display = "none";
+            selectedDay = null;
+            selectedTimeSlot = null;
+        });
+
+        // Nút xác nhận chọn ngày và khung giờ
+        confirmBtn.addEventListener("click", function () {
+            if (selectedDay && selectedTimeSlot) {
+                const selectedDateObj = new Date(currentYear, currentMonth, selectedDay);
+                const formattedDate = formatDate(selectedDateObj);
+                const selectedDateTimeISO = new Date(
+                    currentYear,
+                    currentMonth,
+                    selectedDay,
+                    ...parseTimeString(selectedTimeSlot)
+                ).toISOString();
+
+                window.parent.postMessage(
+                    {
+                        type: "DATETIME_SELECTED",
+                        datetime: selectedDateTimeISO,
+                        formattedDate: formattedDate,
+                        formattedTime: selectedTimeSlot,
+                    },
+                    "*"
+                );
+            } else if (!selectedDay) {
+                alert("Please select a future date (today or later) first");
+            } else {
+                alert("Please select a time slot");
+            }
+        });
+
+        // Hàm chuyển đổi chuỗi thời gian (ví dụ: "10:30 AM") thành [giờ, phút]
+        function parseTimeString(timeStr) {
+            const [time, period] = timeStr.split(" ");
+            let [hours, minutes] = time.split(":").map(Number);
+            if (period === "PM" && hours !== 12) {
+                hours += 12;
+            } else if (period === "AM" && hours === 12) {
+                hours = 0;
+            }
+            return [hours, minutes];
+        }
+
+        // Khởi tạo giao diện
+        updateCalendarTitle();
+        generateCalendar();
+    });
+</script>
+</body>
+</html>
