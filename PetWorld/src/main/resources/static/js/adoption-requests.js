@@ -184,29 +184,6 @@ async function handleRequestRejected(requestId) {
         });
 }
 
-window.addEventListener("popstate", async function () {
-    const requestId = sessionStorage.getItem('requestId');
-    await fetch('/adoption/requestId', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            status: "Scheduled",
-            nextMeetingDate: sessionStorage.getItem('dateTimeSelected')
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.code === 1000) {
-                location.reload(); // Refresh the page to show updated status
-            }
-        })
-        .catch(error => {
-            console.error(`Error schedule request:`, error);
-        });
-});
-
 // View request details
 function viewRequestDetails(requestId) {
     // Implement view details functionality

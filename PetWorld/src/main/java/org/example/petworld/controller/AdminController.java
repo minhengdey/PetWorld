@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(value = "/admin")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-//@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     UsersService usersService;
     PetService petService;

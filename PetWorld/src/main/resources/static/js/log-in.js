@@ -40,7 +40,11 @@ document.getElementById('login-form').addEventListener('submit', async function(
         });
 
         if (response.ok) {
-            window.location.href = '/home';
+            if (role === "ADMIN") {
+                window.location.href = '/admin-dashboard';
+            } else {
+                window.location.href = '/home';
+            }
         } else {
             const data = await response.json();
             alert(data.message || 'Invalid credentials. Please try again.');
