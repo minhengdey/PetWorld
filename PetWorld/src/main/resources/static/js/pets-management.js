@@ -3,53 +3,139 @@ document.addEventListener('DOMContentLoaded', function() {
     addPetBtn.addEventListener('click', () => {
         window.location.href = '/add-pet';
     });
-    // Fetch pets data
-    fetch('/pet/my-pets', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+
+    // Pagination state
+    let currentPage = 0;
+    const pageSize = 3;
+    let totalPages = 0;
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let totalAdoptedCount = 0;
+    let totalAvailableCount = 0;
+
+    // Fetch pets data with pagination
+    function fetchPets(page) {
+        return fetch(`/pet/my-pets?page=${page}&size=${pageSize}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then(response => response.json())
         .then(data => {
             if (data.code === 1000) {
-                const pets = data.result;
+                const pets = data.result.content;
+                totalPages = data.result.totalPages;
 
-                let adoptedPets = [];
-                let availablePets = [];
+                // Update total statistics
+                document.getElementById('total-pets').textContent = data.result.totalElements.toString();
+                
+                // Count adopted and available pets for current page
+                const adoptedCount = pets.filter(pet => pet.isAdopted).length;
+                const availableCount = pets.filter(pet => !pet.isAdopted).length;
 
-                for (let pet of pets) {
-                    if (pet.isAdopted) {
-                        adoptedPets.push(pet);
-                    } else {
-                        availablePets.push(pet);
-                    }
+                // If we're on the first page, reset the total counts
+                if (page === 0) {
+                    totalAdoptedCount = 0;
+                    totalAvailableCount = 0;
                 }
-                // Update statistics
-                document.getElementById('total-pets').textContent = pets.length.toString();
-                document.getElementById('adopted-pets').textContent = adoptedPets.length.toString();
-                document.getElementById('available-pets').textContent = availablePets.length.toString();
 
-                // Load available pets
-                const availablePetsGrid = document.getElementById('available-pets-grid');
-                availablePets.forEach(pet => {
-                    availablePetsGrid.appendChild(createPetCard(pet, false));
-                });
-                console.log(availablePets);
-                // Load adopted pets
-                const adoptedPetsGrid = document.getElementById('adopted-pets-grid');
-                adoptedPets.forEach(pet => {
-                    adoptedPetsGrid.appendChild(createPetCard(pet, true));
-                });
+                // Add to total counts
+                totalAdoptedCount += adoptedCount;
+                totalAvailableCount += availableCount;
+
+                // Update the statistics display
+                document.getElementById('adopted-pets').textContent = totalAdoptedCount.toString();
+                document.getElementById('available-pets').textContent = totalAvailableCount.toString();
+
+                // Update pets grid
+                updatePetsGrid(pets);
+                updatePagination();
             }
         })
         .catch(error => {
             console.error("Error fetching pets data:", error);
         });
+    }
+
+    function updatePetsGrid(pets) {
+        const petsGrid = document.getElementById('pets-grid');
+        petsGrid.innerHTML = '';
+        
+        // Apply filter
+        let filteredPets = pets;
+        if (currentFilter === 'available') {
+            filteredPets = pets.filter(pet => !pet.isAdopted);
+        } else if (currentFilter === 'adopted') {
+            filteredPets = pets.filter(pet => pet.isAdopted);
+        }
+        
+        // Apply search
+        if (searchQuery) {
+            filteredPets = filteredPets.filter(pet => 
+                pet.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                pet.breed.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        filteredPets.forEach(pet => {
+            petsGrid.appendChild(createPetCard(pet, pet.isAdopted));
+        });
+    }
+
+    function updatePagination() {
+        document.getElementById('pageInfo').textContent = `Page ${currentPage + 1} of ${totalPages}`;
+        document.getElementById('prevPage').disabled = currentPage === 0;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages - 1;
+    }
+
+    // Event listeners for pagination buttons
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (currentPage > 0) {
+            currentPage--;
+            fetchPets(currentPage);
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            fetchPets(currentPage);
+        }
+    });
+
+    // Filter buttons event listeners
+    document.querySelectorAll('.filter-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            button.classList.add('active');
+            // Update current filter
+            currentFilter = button.dataset.filter;
+            // Refresh pets grid
+            fetchPets(currentPage);
+        });
+    });
+
+    // Search input event listener
+    const searchInput = document.getElementById('searchInput');
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            searchQuery = e.target.value;
+            fetchPets(currentPage);
+        }, 300);
+    });
+
+    // Initial fetch
+    fetchPets(currentPage);
+
     function createPetCard(pet, isAdopted) {
         const div = document.createElement('div');
         div.className = 'pet-card';
-        div.onclick = () => showPetDetails(pet);  // Add click handler
+        div.onclick = () => showPetDetails(pet);
         div.innerHTML = `
             <div class="pet-image">
                 <img src="${pet.avatar || '/images/default-pet.jpg'}" alt="${pet.name}">

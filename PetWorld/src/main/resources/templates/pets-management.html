@@ -184,37 +184,32 @@
                 </div>
             </div>
             <div class="pet-sections">
-                <!-- Available Pets Section -->
+                <!-- Combined Pets Section -->
                 <section class="pets-section">
                     <div class="section-header">
-                        <h2>Available Pets</h2>
+                        <h2>All Pets</h2>
                         <div class="header-actions">
                             <div class="search-box">
                                 <span class="material-symbols-outlined">search</span>
-                                <input type="text" placeholder="Search available pets...">
+                                <input type="text" placeholder="Search pets..." id="searchInput">
                             </div>
                             <div class="filter-buttons">
-                                <button class="filter-btn active">All</button>
+                                <button class="filter-btn active" data-filter="all">All</button>
+                                <button class="filter-btn" data-filter="available">Available</button>
+                                <button class="filter-btn" data-filter="adopted">Adopted</button>
                             </div>
                         </div>
                     </div>
-                    <div class="pets-grid" id="available-pets-grid">
-
+                    <div class="pets-grid" id="pets-grid">
                     </div>
-                </section>
-                <!-- Adopted Pets Section -->
-                <section class="pets-section">
-                    <div class="section-header">
-                        <h2>Adopted Pets</h2>
-                        <div class="header-actions">
-                            <div class="search-box">
-                                <span class="material-symbols-outlined">search</span>
-                                <input type="text" placeholder="Search adopted pets...">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pets-grid" id="adopted-pets-grid">
-
+                    <div class="pagination" id="pets-pagination">
+                        <button class="pagination-btn" id="prevPage">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <span id="pageInfo">Page 1</span>
+                        <button class="pagination-btn" id="nextPage">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
                     </div>
                 </section>
             </div>

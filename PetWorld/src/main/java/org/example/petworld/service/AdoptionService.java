@@ -82,11 +82,11 @@ public class AdoptionService {
                 new AppException(ErrorCode.ADOPTION_NOT_FOUND));
         adoptionMapper.update(adoption, request);
         adoption.setUpdatedAt(new Date());
-        if (adoption.getStatus().equals("Approved")) {
+        if (adoption.getStatus().equals("Accepted")) {
             adoption.getPet().setIsAdopted(true);
             adoption.setAdoptionDate(new Date());
         }
-        if (adoption.getStatus().equals("Approved") || adoption.getStatus().equals("Rejected")) {
+        if (adoption.getStatus().equals("Accepted") || adoption.getStatus().equals("Rejected")) {
             NotificationRequest notificationRequest = NotificationRequest.builder()
                     .user(adoption.getPetOwner())
                     .message("Your request to adopt " + adoption.getPet().getName() + " has been " + adoption.getStatus().toLowerCase() + ".")

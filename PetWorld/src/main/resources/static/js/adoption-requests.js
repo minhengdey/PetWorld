@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', async function() {
-    let allRequests = [];
-    let currentFilter = 'all';
+let allRequests = [];
+let currentFilter = 'all';
 
+document.addEventListener('DOMContentLoaded', async function() {
     // Fetch adoption requests
     await fetch('/adoption/all-requests', {
         method: 'GET',
@@ -58,7 +58,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }, {});
 
         document.getElementById('pending-count').textContent = stats.Pending || 0;
-        document.getElementById('approved-count').textContent = stats.Scheduled || 0;
+        document.getElementById('accepted-count').textContent = stats.Accepted || 0;
+        document.getElementById('scheduled-count').textContent = stats.Scheduled || 0;
         document.getElementById('rejected-count').textContent = stats.Rejected || 0;
     }
 
@@ -140,12 +141,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     </div>
     <div class="request-actions">
         ${request.status === 'Pending' ? `
-            <button class="action-btn approve" onclick="{
+            <button class="action-btn schedule" onclick="{
                 sessionStorage.setItem('requestId', ${request.id});
                 window.location.href = '/calendar-request';
             }">
-                <span class="material-symbols-outlined">check</span>
+                <span class="material-symbols-outlined">event</span>
                 Schedule
+            </button>
+            <button class="action-btn reject" onclick="handleRequestRejected(${request.id})">
+                <span class="material-symbols-outlined">close</span>
+                Reject
+            </button>
+        ` : request.status === 'Scheduled' ? `
+            <button class="action-btn accept" onclick="handleRequestAccepted(${request.id})">
+                <span class="material-symbols-outlined">check</span>
+                Accept
             </button>
             <button class="action-btn reject" onclick="handleRequestRejected(${request.id})">
                 <span class="material-symbols-outlined">close</span>
@@ -163,6 +173,27 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 // Handle request actions
+async function handleRequestAccepted(requestId) {
+    await fetch(`/adoption/${requestId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            status: "Accepted"
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.code === 1000) {
+                location.reload(); // Refresh the page to show updated status
+            }
+        })
+        .catch(error => {
+            console.error(`Error accepting request:`, error);
+        });
+}
+
 async function handleRequestRejected(requestId) {
     await fetch(`/adoption/${requestId}`, {
         method: 'PUT',
@@ -186,6 +217,123 @@ async function handleRequestRejected(requestId) {
 
 // View request details
 function viewRequestDetails(requestId) {
-    // Implement view details functionality
-    console.log('Viewing details for request:', requestId);
+    const request = allRequests.find(r => r.id === requestId);
+    if (!request) return;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adoption Request Details</h2>
+                <button class="close-modal" onclick="this.parentElement.parentElement.parentElement.remove()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-section">
+                    <h3>Requester Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Name:</label>
+                            <span>${request.petOwner.name}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Phone:</label>
+                            <span>${request.petOwner.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Email:</label>
+                            <span>${request.petOwner.email}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Address:</label>
+                            <span>${request.petOwner.address}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Pet Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Name:</label>
+                            <span>${request.pet.name}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Breed:</label>
+                            <span>${request.pet.breed}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Residence Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Residence Type:</label>
+                            <span>${request.residenceType}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Has Yard:</label>
+                            <span>${request.hasYard ? 'Yes' : 'No'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Has Fenced Area:</label>
+                            <span>${request.hasFencedArea ? 'Yes' : 'No'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Pet Experience</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Previous Experience:</label>
+                            <span>${request.hasOwnedPetsBefore ? 'Yes' : 'No'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Experience Details:</label>
+                            <span>${request.petExperience || 'No details provided'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Has Other Pets:</label>
+                            <span>${request.hasOtherPets ? 'Yes' : 'No'}</span>
+                        </div>
+                        ${request.hasOtherPets ? `
+                            <div class="detail-item">
+                                <label>Other Pets Details:</label>
+                                <span>${request.otherPetsDetails || 'No details provided'}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Adoption Details</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Adoption Reason:</label>
+                            <span>${request.adoptionReason}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Request Date:</label>
+                            <span>${new Date(request.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        ${request.nextMeetingDate ? `
+                            <div class="detail-item">
+                                <label>Next Meeting:</label>
+                                <span>${new Date(request.nextMeetingDate).toLocaleDateString()}</span>
+                            </div>
+                        ` : ''}
+                        <div class="detail-item">
+                            <label>Status:</label>
+                            <span class="status-badge ${request.status.toLowerCase()}">${request.status}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
 }

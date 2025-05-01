@@ -105,42 +105,37 @@
 .search-box {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     flex: 1;
-    min-width: 200px;
-    max-width: 400px;
 }
 .search-box input {
     border: none;
-    background: none;
     outline: none;
-    font-size: 0.95rem;
     width: 100%;
 }
 .filter-buttons {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-left: 1rem;
 }
 .filter-btn {
-    padding: 6px 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     background: none;
-    color: #666;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 .filter-btn:hover {
-    background-color: #f8f9fa;
+    background-color: #f0f0f0;
 }
 .filter-btn.active {
     background-color: #9b87f5;
-    border-color: #9b87f5;
     color: white;
+    border-color: #9b87f5;
 }
 .pets-grid {
     display: grid;
@@ -372,4 +367,40 @@
     .pets-grid {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+.pagination-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: #f0f0f0;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#availablePageInfo,
+#adoptedPageInfo {
+    font-size: 0.9rem;
+    color: #666;
 }
