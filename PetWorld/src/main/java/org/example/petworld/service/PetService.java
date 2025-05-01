@@ -14,6 +14,9 @@ import org.example.petworld.enums.Role;
 import org.example.petworld.exception.AppException;
 import org.example.petworld.mapper.PetMapper;
 import org.example.petworld.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -84,32 +87,29 @@ public class PetService {
         return petMapper.toPetResponse(pet);
     }
 
-    public Set<PetResponse> getAllPetByPetOwnerId(Long userId) {
-        PetOwnerEntity petOwner = petOwnerRepository.findByIdAndIsDeleted(userId, false)
-                .orElseThrow(() ->
-                        new AppException(ErrorCode.USER_NOT_FOUND));
-        Set<PetEntity> pets = petOwner.getPets();
-        Set<PetResponse> petResponses = new HashSet<>();
-        for (PetEntity pet : pets) {
-            if (!pet.getIsDeleted()) {
-                petResponses.add(petMapper.toPetResponse(pet));
-            }
-        }
-        return petResponses;
+    public Page<PetResponse> getAllPetByPetOwnerId(Long userId, Pageable pageable) {
+
+        Page<PetEntity> petPage = petRepository.findAllByIsDeletedFalseAndPetOwnerId(pageable, userId);
+
+        List<PetResponse> petResponses = petPage.getContent()
+                .stream()
+                .map(petMapper::toPetResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(petResponses, pageable, petPage.getTotalElements());
     }
 
-    public Set<PetResponse> getAllByPetCenterId(Long userId) {
-        PetCenterEntity petCenter = petCenterRepository.findByIdAndIsDeleted(userId, false)
-                .orElseThrow(() ->
-                        new AppException(ErrorCode.USER_NOT_FOUND));
-        Set<PetEntity> pets = petCenter.getPetsAvailable();
-        Set<PetResponse> petResponses = new HashSet<>();
-        for (PetEntity pet : pets) {
-            if (!pet.getIsDeleted()) {
-                petResponses.add(petMapper.toPetResponse(pet));
-            }
-        }
-        return petResponses;
+
+    public Page<PetResponse> getAllByPetCenterId(Long userId, Pageable pageable) {
+
+        Page<PetEntity> petPage = petRepository.findAllByIsDeletedFalseAndPetCenterId(pageable, userId);
+
+        List<PetResponse> petResponses = petPage.getContent()
+                .stream()
+                .map(petMapper::toPetResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(petResponses, pageable, petPage.getTotalElements());
     }
 
     public Set<PetResponse> getAllPetForPC() {

@@ -10,6 +10,9 @@ import org.example.petworld.dto.response.PetResponse;
 import org.example.petworld.enums.ErrorCode;
 import org.example.petworld.exception.AppException;
 import org.example.petworld.service.PetService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,20 +83,24 @@ public class PetController {
 
     @GetMapping(value = "/my-pets")
     @PreAuthorize("hasRole('PET_OWNER') or hasRole('PET_CENTER')")
-    public ApiResponse<Set<PetResponse>> getAllByUserId () {
+    public ApiResponse<Page<PetResponse>> getAllByUserId (@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size) {
         String role = String.valueOf(SecurityContextHolder.getContext()
                 .getAuthentication().getAuthorities());
         Long userId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
                 .getContext().getAuthentication()).getToken().getSubject());
+
+        Pageable pageable = PageRequest.of(page, size);
+
         if (role.equals("[ROLE_PET_OWNER]")) {
-            return ApiResponse.<Set<PetResponse>>builder()
+            return ApiResponse.<Page<PetResponse>>builder()
                     .code(1000)
-                    .result(petService.getAllPetByPetOwnerId(userId))
+                    .result(petService.getAllPetByPetOwnerId(userId, pageable))
                     .build();
         } else {
-            return ApiResponse.<Set<PetResponse>>builder()
+            return ApiResponse.<Page<PetResponse>>builder()
                     .code(1000)
-                    .result(petService.getAllByPetCenterId(userId))
+                    .result(petService.getAllByPetCenterId(userId, pageable))
                     .build();
         }
     }

@@ -19,19 +19,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Function to fetch all pets
-    function fetchPets() {
-        fetch('/pet/my-pets', {
+    let currentPage = 0;
+
+// Function to fetch all pets with pagination
+    function fetchPets(page = 0, size = 3) {
+        fetch(`/pet/my-pets?page=${page}&size=${size}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
             .then(response => response.json())
             .then(data => {
                 if (data.code === 1000) {
-                    renderPets(data.result);
+                    renderPets(data.result.content); // dùng `.content` nếu backend trả về dạng Page
+                    updatePagination(data.result.totalPages, data.result.number); // cập nhật phân trang
 
-                    // Show empty state if no pets
-                    if (!data.result || data.result.length === 0) {
+                    if (!data.result.content || data.result.content.length === 0) {
                         emptyState.style.display = 'block';
                         petsContainer.style.display = 'none';
                     } else {
@@ -42,23 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error("Error fetching pets:", error);
-                // Show empty state with error message
                 emptyState.style.display = 'block';
                 petsContainer.style.display = 'none';
             });
     }
 
-    // Function to render pets in the grid
+// Function to render pets
     function renderPets(pets) {
         if (!petsContainer) return;
-        petsContainer.innerHTML = ''; // Clear current content
+        petsContainer.innerHTML = '';
 
         pets.forEach(pet => {
             const petCard = document.createElement('div');
             petCard.classList.add('pet-card');
             petCard.dataset.petId = pet.id;
 
-            // Create pet image
             const petImage = document.createElement('div');
             petImage.classList.add('pet-image');
             const img = document.createElement('img');
@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
             img.alt = pet.name || 'Unknown Pet';
             petImage.appendChild(img);
 
-            // Create pet info
             const petInfo = document.createElement('div');
             petInfo.classList.add('pet-info');
             const petName = document.createElement('h3');
@@ -76,18 +75,50 @@ document.addEventListener('DOMContentLoaded', function() {
             petInfo.appendChild(petName);
             petInfo.appendChild(petBreed);
 
-            // Combine sections
             petCard.appendChild(petImage);
             petCard.appendChild(petInfo);
 
-            // Add click event to show pet details
-            petCard.addEventListener('click', function() {
+            petCard.addEventListener('click', function () {
                 showPetDetails(pet);
             });
 
             petsContainer.appendChild(petCard);
         });
     }
+
+// Function to update pagination UI
+    function updatePagination(totalPages, currentPageIndex) {
+        const paginationContainer = document.getElementById('paginationContainer');
+        paginationContainer.innerHTML = '';
+
+        // Previous button with icon
+        const prevBtn = document.createElement('button');
+        prevBtn.classList.add('pagination-btn', 'prev-btn');  // Thêm lớp CSS
+        prevBtn.disabled = currentPageIndex === 0;
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>'; // Font Awesome icon cho Previous
+        prevBtn.onclick = () => {
+            currentPage--;
+            fetchPets(currentPage);
+        };
+        paginationContainer.appendChild(prevBtn);
+
+        // Current page info
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `Page ${currentPageIndex + 1} of ${totalPages}`;
+        paginationContainer.appendChild(pageInfo);
+
+        // Next button with icon
+        const nextBtn = document.createElement('button');
+        nextBtn.classList.add('pagination-btn', 'next-btn');  // Thêm lớp CSS
+        nextBtn.disabled = currentPageIndex >= totalPages - 1;
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>'; // Font Awesome icon cho Next
+        nextBtn.onclick = () => {
+            currentPage++;
+            fetchPets(currentPage);
+        };
+        paginationContainer.appendChild(nextBtn);
+    }
+
 
     // Function to show pet details modal
     function showPetDetails(pet) {
