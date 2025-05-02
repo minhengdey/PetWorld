@@ -1,6 +1,8 @@
 package org.example.petworld.repository;
 
 import org.example.petworld.entity.PetCareServicesEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,5 @@ public interface PetCareServicesRepository extends JpaRepository<PetCareServices
     Optional<PetCareServicesEntity> findByEmailAndIsDeleted(String email, Boolean isDeleted);
     boolean existsByIdAndIsDeleted(Long id, Boolean isDeleted);
     Optional<PetCareServicesEntity> findByIdAndIsDeleted(Long id, Boolean isDeleted);
-    List<PetCareServicesEntity> findAllByIsDeleted (Boolean isDeleted);
+    Page<PetCareServicesEntity> findAllByIsDeletedFalse (Pageable pageable);
 }

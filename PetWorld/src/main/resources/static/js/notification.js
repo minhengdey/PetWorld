@@ -182,10 +182,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 alert('Error switching roles. Please try again.');
                             }
                         } else {
-                            console.error('Error get pet');
+                            if (notification.path) {
+                                window.location.href = notification.path;
+                            }
                         }
                     } catch (error) {
-                        console.error(error);
+                        if (notification.path) {
+                            window.location.href = notification.path;
+                        }
                     }
                 } else {
                     if (notification.path) {

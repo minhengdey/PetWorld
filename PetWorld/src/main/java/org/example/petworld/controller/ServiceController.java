@@ -1,6 +1,5 @@
 package org.example.petworld.controller;
 
-import com.cloudinary.Api;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +8,13 @@ import org.example.petworld.dto.request.ServiceRequest;
 import org.example.petworld.dto.response.ApiResponse;
 import org.example.petworld.dto.response.ServiceResponse;
 import org.example.petworld.service.ServiceService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/service")
@@ -45,19 +44,23 @@ public class ServiceController {
 
     @PreAuthorize("hasRole('PET_CARE_SERVICES')")
     @GetMapping(value = "/my-services")
-    public ApiResponse<Set<ServiceResponse>> getAllMyServices () {
+    public ApiResponse<Page<ServiceResponse>> getAllMyServices (@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size) {
         Long userId = Long.valueOf(((JwtAuthenticationToken) SecurityContextHolder
                 .getContext().getAuthentication()).getToken().getSubject());
-        return ApiResponse.<Set<ServiceResponse>>builder()
-                .result(serviceService.getAllMyServices(userId))
+        Pageable pageable = PageRequest.of(page, size);
+        return ApiResponse.<Page<ServiceResponse>>builder()
+                .result(serviceService.getAllMyServices(userId, pageable))
                 .code(1000)
                 .build();
     }
 
     @GetMapping(value = "/all")
-    public ApiResponse<List<ServiceResponse>> getAllServicesAvailable () {
-        return ApiResponse.<List<ServiceResponse>>builder()
-                .result(serviceService.getAllServiceAvailable())
+    public ApiResponse<Page<ServiceResponse>> getAllServicesAvailable (@RequestParam(defaultValue = "0") int page,
+                                                                       @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ApiResponse.<Page<ServiceResponse>>builder()
+                .result(serviceService.getAllServiceAvailable(pageable))
                 .code(1000)
                 .build();
     }

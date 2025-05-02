@@ -47,16 +47,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 `;
     }
 
-    // Fetch user's pets
-    function fetchPets() {
-        fetch('/pet/my-pets', {
+    // Fetch user's pets with pagination
+    function fetchPets(page = 0, size = 3) {
+        fetch(`/pet/my-pets?page=${page}&size=${size}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
             .then(response => response.json())
             .then(data => {
                 if (data.code === 1000) {
-                    renderPets(data.result);
+                    renderPets(data.result, page);
                 }
             })
             .catch(error => {
@@ -66,38 +66,37 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let petId = null;
 
-    // Render pet list
-    function renderPets(pets) {
+    // Render pets and pagination
+    function renderPets(pageData, currentPage) {
+        const pets = pageData.content;
         const petsContainer = document.getElementById('petsContainer');
-        if (!petsContainer) return;
-
-        petsContainer.innerHTML = ''; // Clear container
+        petsContainer.innerHTML = '';
 
         pets.forEach(pet => {
             const petCard = document.createElement('div');
-            petCard.classList.add('pet-card');
+            petCard.className = 'pet-card';
             petCard.dataset.petId = pet.id;
 
-            // Create pet image
+            // Pet image
             const petImage = document.createElement('div');
-            petImage.classList.add('pet-image');
+            petImage.className = 'pet-image';
             const img = document.createElement('img');
             img.src = pet.avatar || '/placeholder.svg';
             img.alt = pet.name || 'Unknown Pet';
             petImage.appendChild(img);
 
-            // Create pet info
+            // Pet info
             const petInfo = document.createElement('div');
-            petInfo.classList.add('pet-info');
+            petInfo.className = 'pet-info';
             const petName = document.createElement('h3');
             petName.textContent = pet.name || 'No Name';
             petInfo.appendChild(petName);
 
-            // Assemble the card
+            // Assemble card
             petCard.appendChild(petImage);
             petCard.appendChild(petInfo);
 
-            // Add click event for selection
+            // Click to select
             petCard.addEventListener('click', function() {
                 petId = pet.id;
                 selectPet(petCard);
@@ -105,6 +104,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
             petsContainer.appendChild(petCard);
         });
+
+        renderPetsPagination(pageData, currentPage);
+    }
+
+    // Render pagination controls for pets
+    function renderPetsPagination(pageData, currentPage) {
+        const paginationContainer = document.getElementById('petsPaginationContainer');
+        if (!paginationContainer) return;
+
+        const totalPages = pageData.totalPages;
+        paginationContainer.innerHTML = '';
+
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.type = 'button';
+        prevBtn.classList.add('pagination-btn', 'prev-btn');
+        prevBtn.disabled = currentPage === 0;
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.onclick = () => fetchPets(currentPage - 1);
+        paginationContainer.appendChild(prevBtn);
+
+        // Page info
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `Page ${currentPage + 1} of ${totalPages}`;
+        paginationContainer.appendChild(pageInfo);
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.classList.add('pagination-btn', 'next-btn');
+        nextBtn.disabled = currentPage >= totalPages - 1;
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.onclick = () => fetchPets(currentPage + 1);
+        paginationContainer.appendChild(nextBtn);
     }
 
     // Handle pet selection

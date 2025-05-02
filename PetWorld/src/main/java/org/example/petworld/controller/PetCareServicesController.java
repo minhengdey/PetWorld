@@ -8,6 +8,9 @@ import org.example.petworld.dto.request.PetCareServicesRequest;
 import org.example.petworld.dto.response.ApiResponse;
 import org.example.petworld.dto.response.PetCareServicesResponse;
 import org.example.petworld.service.PetCareServicesService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +53,12 @@ public class PetCareServicesController {
     }
 
     @GetMapping(value = "/all")
-    public ApiResponse<Set<PetCareServicesResponse>> getAll () {
-        return ApiResponse.<Set<PetCareServicesResponse>>builder()
+    public ApiResponse<Page<PetCareServicesResponse>> getAll (@RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ApiResponse.<Page<PetCareServicesResponse>>builder()
                 .code(1000)
-                .result(petCareServicesService.getAll())
+                .result(petCareServicesService.getAll(pageable))
                 .build();
     }
 }

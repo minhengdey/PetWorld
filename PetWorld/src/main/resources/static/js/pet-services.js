@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Fetch centers data
-    async function fetchCenters() {
+    async function fetchCenters(page = 0, size = 3) {
         try {
-            const response = await fetch('/pet-care-services/all');
+            const response = await fetch(`/pet-care-services/all?page=${page}&size=${size}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             if (data.code === 1000) {
                 renderCenters(data.result);
+                renderCentersPagination(data.result, page);
             }
         } catch (error) {
             console.error('Error fetching centers:', error);
@@ -15,13 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Fetch services data
-    async function fetchServices() {
+    async function fetchServices(page = 0, size = 3) {
         try {
-            const response = await fetch('/service/all');
+            const response = await fetch(`/service/all?page=${page}&size=${size}`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             if (data.code === 1000) {
                 renderServices(data.result);
+                renderServicesPagination(data.result, page);
             }
         } catch (error) {
             console.error('Error fetching services:', error);
@@ -29,9 +31,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Render centers pagination
+    function renderCentersPagination(pageData, currentPage) {
+        const paginationContainer = document.getElementById('centersPaginationContainer');
+        if (!paginationContainer) return;
+
+        const totalPages = pageData.totalPages;
+        paginationContainer.innerHTML = '';
+
+        // Previous button with icon
+        const prevBtn = document.createElement('button');
+        prevBtn.classList.add('pagination-btn', 'prev-btn');
+        prevBtn.disabled = currentPage === 0;
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.onclick = () => fetchCenters(currentPage - 1);
+        paginationContainer.appendChild(prevBtn);
+
+        // Current page info
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `Page ${currentPage + 1} of ${totalPages}`;
+        paginationContainer.appendChild(pageInfo);
+
+        // Next button with icon
+        const nextBtn = document.createElement('button');
+        nextBtn.classList.add('pagination-btn', 'next-btn');
+        nextBtn.disabled = currentPage >= totalPages - 1;
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.onclick = () => fetchCenters(currentPage + 1);
+        paginationContainer.appendChild(nextBtn);
+    }
+
+    // Render services pagination
+    function renderServicesPagination(pageData, currentPage) {
+        const paginationContainer = document.getElementById('servicesPaginationContainer');
+        if (!paginationContainer) return;
+
+        const totalPages = pageData.totalPages;
+        paginationContainer.innerHTML = '';
+
+        // Previous button with icon
+        const prevBtn = document.createElement('button');
+        prevBtn.classList.add('pagination-btn', 'prev-btn');
+        prevBtn.disabled = currentPage === 0;
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.onclick = () => fetchServices(currentPage - 1);
+        paginationContainer.appendChild(prevBtn);
+
+        // Current page info
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `Page ${currentPage + 1} of ${totalPages}`;
+        paginationContainer.appendChild(pageInfo);
+
+        // Next button with icon
+        const nextBtn = document.createElement('button');
+        nextBtn.classList.add('pagination-btn', 'next-btn');
+        nextBtn.disabled = currentPage >= totalPages - 1;
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.onclick = () => fetchServices(currentPage + 1);
+        paginationContainer.appendChild(nextBtn);
+    }
+
     // Render centers
-    function renderCenters(centers) {
+    function renderCenters(pageData) {
         const centerCards = document.getElementById('centerCards');
+        const centers = pageData.content;
         centerCards.innerHTML = centers.map(center => `
                 <div class="center-card">
                     <div class="center-image">
@@ -45,8 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Render services
-    function renderServices(services) {
+    function renderServices(pageData) {
         const servicesGrid = document.getElementById('servicesGrid');
+        const services = pageData.content;
         servicesGrid.innerHTML = services.map((service, index) => `
                 <div class="service-card" data-service-id="${service.id}">
                     <div class="service-info">

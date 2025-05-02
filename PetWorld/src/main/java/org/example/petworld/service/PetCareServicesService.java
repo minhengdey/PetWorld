@@ -13,6 +13,9 @@ import org.example.petworld.enums.Role;
 import org.example.petworld.exception.AppException;
 import org.example.petworld.mapper.PetCareServicesMapper;
 import org.example.petworld.repository.PetCareServicesRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,10 +67,11 @@ public class PetCareServicesService {
                         new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
-    public Set<PetCareServicesResponse> getAll() {
-        return petCareServicesRepository.findAllByIsDeleted(false).stream()
-                .map(petCareServicesMapper::toPetCareServicesResponse)
-                .collect(Collectors.toSet());
+    public Page<PetCareServicesResponse> getAll(Pageable pageable) {
+        Page<PetCareServicesEntity> petCareServicesPage = petCareServicesRepository.findAllByIsDeletedFalse(pageable);
+        List<PetCareServicesResponse> petCareServicesResponses = petCareServicesPage.getContent()
+                .stream().map(petCareServicesMapper::toPetCareServicesResponse).toList();
+        return new PageImpl<>(petCareServicesResponses, pageable, petCareServicesPage.getTotalElements());
     }
 
     public void deleteById(Long id) {

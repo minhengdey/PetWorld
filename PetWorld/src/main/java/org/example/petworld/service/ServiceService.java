@@ -13,6 +13,9 @@ import org.example.petworld.exception.AppException;
 import org.example.petworld.mapper.ServiceMapper;
 import org.example.petworld.repository.PetCareServicesRepository;
 import org.example.petworld.repository.ServiceRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -61,21 +64,20 @@ public class ServiceService {
                 .toList();
     }
 
-    public List<ServiceResponse> getAllServiceAvailable() {
-        return serviceRepository.findAllByIsDeleted(false).stream()
-                .map(serviceMapper::toResponse)
-                .toList();
+    public Page<ServiceResponse> getAllServiceAvailable(Pageable pageable) {
+        Page<ServiceEntity> servicePage = serviceRepository.findAllByIsDeletedFalse(pageable);
+
+        List<ServiceResponse> serviceResponses = servicePage.getContent().stream()
+                .map(serviceMapper::toResponse).toList();
+        return new PageImpl<>(serviceResponses, pageable, servicePage.getTotalElements());
     }
 
-    public Set<ServiceResponse> getAllMyServices(Long petCareServicesId) {
-        List<ServiceEntity> list = serviceRepository.findAllByIsDeleted(false);
-        Set<ServiceResponse> serviceResponses = new HashSet<>();
-        for (ServiceEntity service : list) {
-            if (service.getPetCareServices().getId().equals(petCareServicesId)) {
-                serviceResponses.add(serviceMapper.toResponse(service));
-            }
-        }
-        return serviceResponses;
+    public Page<ServiceResponse> getAllMyServices(Long petCareServicesId, Pageable pageable) {
+        Page<ServiceEntity> servicePage = serviceRepository.findAllByPetCareServicesIdAndIsDeletedFalse(pageable, petCareServicesId);
+
+        List<ServiceResponse> serviceResponses = servicePage.getContent().stream().map(serviceMapper::toResponse).toList();
+
+        return new PageImpl<>(serviceResponses, pageable, servicePage.getTotalElements());
     }
 
     public ServiceResponse updateService(ServiceRequest request, Long id) {

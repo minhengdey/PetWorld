@@ -570,3 +570,52 @@
         width: 95%;
     }
 }
+
+/* Căn giữa container phân trang */
+#paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Lớp chung cho tất cả các nút phân trang */
+.pagination-btn {
+    padding: 10px 15px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Thêm biểu tượng vào các nút */
+.pagination-btn i {
+    font-size: 20px;
+}
+
+/* Hiệu ứng khi hover */
+.pagination-btn:hover {
+    background-color: #e2e2e2;
+    transform: scale(1.1);
+}
+
+/* Nút bị vô hiệu hóa */
+.pagination-btn:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+/* Nút Previous */
+.prev-btn {
+    margin-right: 10px;
+}
+
+/* Nút Next */
+.next-btn {
+    margin-left: 10px;
+}
