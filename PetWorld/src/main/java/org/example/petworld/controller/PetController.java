@@ -106,10 +106,13 @@ public class PetController {
     }
 
     @GetMapping(value = "/pets-pc")
-    public ApiResponse<Set<PetResponse>> getAllPetForPC () {
-        return ApiResponse.<Set<PetResponse>>builder()
+    public ApiResponse<Page<PetResponse>> getAllPetForPC (@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ApiResponse.<Page<PetResponse>>builder()
                 .code(1000)
-                .result(petService.getAllPetForPC())
+                .result(petService.getAllPetForPC(pageable))
                 .build();
     }
 

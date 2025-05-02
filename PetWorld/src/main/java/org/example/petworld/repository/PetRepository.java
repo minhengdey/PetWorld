@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface PetRepository extends JpaRepository<PetEntity, Long> {
     Optional<PetEntity> findByIdAndIsDeleted (Long id, boolean isDeleted);
     Optional<PetEntity> findByNameAndPetOwnerIdAndIsDeleted (String name, Long petOwnerId, boolean isDeleted);
-    List<PetEntity> findAllByIsDeleted (Boolean isDeleted);
+    Page<PetEntity> findAllByIsDeletedFalseAndPetCenterNotNullAndIsAdoptedFalse (Pageable pageable);
     boolean existsByNameAndPetCenterAndIsDeleted (String name, PetCenterEntity petCenter, boolean isDeleted);
     boolean existsByNameAndPetOwnerAndIsDeleted (String name, PetOwnerEntity petOwner, boolean isDeleted);
     Page<PetEntity> findAllByIsDeletedFalseAndPetOwnerId(Pageable pageable, Long petOwnerId);
