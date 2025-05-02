@@ -112,15 +112,10 @@ public class PetService {
         return new PageImpl<>(petResponses, pageable, petPage.getTotalElements());
     }
 
-    public Set<PetResponse> getAllPetForPC() {
-        List<PetEntity> petEntities = petRepository.findAll();
-        Set<PetResponse> pets = new HashSet<>();
-        for (PetEntity pet : petEntities) {
-            if (!pet.getIsDeleted() && pet.getPetCenter() != null && pet.getAdoption() == null) {
-                pets.add(petMapper.toPetResponse(pet));
-            }
-        }
-        return pets;
+    public Page<PetResponse> getAllPetForPC(Pageable pageable) {
+        Page<PetEntity> petPage = petRepository.findAllByIsDeletedFalseAndPetCenterNotNullAndIsAdoptedFalse(pageable);
+        List<PetResponse> petResponses = petPage.getContent().stream().map(petMapper::toPetResponse).toList();
+        return new PageImpl<>(petResponses, pageable, petPage.getTotalElements());
     }
 
     public List<PetResponse> getAllPet() {

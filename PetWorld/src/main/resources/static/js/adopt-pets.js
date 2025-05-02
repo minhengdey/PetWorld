@@ -6,29 +6,101 @@ document.addEventListener('DOMContentLoaded', function() {
     const petDetailsModal = document.getElementById('petDetailsModal');
     const closePetDetailsModal = document.getElementById('closePetDetailsModal');
 
+    // Pagination state
+    const paginationState = {
+        available: { page: 0, size: 8, total: 0 },
+        requested: { page: 0, size: 8, total: 0 },
+        accepted: { page: 0, size: 8, total: 0 }
+    };
+
     fetchAllPets();
 
     function fetchAllPets() {
+        // Fetch available pets with pagination
+        fetch(`/pet/pets-pc?page=${paginationState.available.page}&size=${paginationState.available.size}`, { 
+            method: 'GET', 
+            headers: { 'Content-Type': 'application/json' } 
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 1000) {
+                    const pets = data.result.content;
+                    paginationState.available.total = data.result.totalElements;
+                    document.querySelector('[data-tab="available"] .tab-badge').textContent = paginationState.available.total;
+                    renderPets('available', pets);
+                    updatePaginationControls('available');
+                }
+            })
+            .catch(error => console.error("Error fetching available pets:", error));
+
+        // Fetch adoption requests
         fetch('/adoption/all-requests', { method: 'GET', headers: { 'Content-Type': 'application/json' } })
             .then(response => response.json())
             .then(data => {
                 if (data.code === 1000) {
                     const requestedPets = data.result.filter(req => req.status === 'Pending').map(request => request.pet);
-                    document.querySelector('[data-tab="requested"] .tab-badge').textContent = requestedPets.length;
+                    const acceptedPets = data.result.filter(req => req.status === 'Accepted').map(request => request.pet);
+                    
+                    paginationState.requested.total = requestedPets.length;
+                    paginationState.accepted.total = acceptedPets.length;
+                    
+                    document.querySelector('[data-tab="requested"] .tab-badge').textContent = paginationState.requested.total;
+                    document.querySelector('[data-tab="accepted"] .tab-badge').textContent = paginationState.accepted.total;
+                    
                     renderPets('requested', requestedPets);
+                    renderPets('accepted', acceptedPets);
                 }
             })
             .catch(error => console.error("Error fetching adoption requests:", error));
+    }
 
-        fetch('/pet/pets-pc', { method: 'GET', headers: { 'Content-Type': 'application/json' } })
-            .then(response => response.json())
-            .then(data => {
-                if (data.code === 1000) {
-                    document.querySelector('[data-tab="available"] .tab-badge').textContent = data.result.length;
-                    renderPets('available', data.result);
+    function updatePaginationControls(tabId) {
+        const container = document.querySelector(`#${tabId} .pets-grid`);
+        const state = paginationState[tabId];
+        
+        // Remove existing pagination if any
+        const existingPagination = container.querySelector('.pagination-controls');
+        if (existingPagination) {
+            existingPagination.remove();
+        }
+
+        // Only add pagination for available pets tab
+        if (tabId === 'available') {
+            const pagination = document.createElement('div');
+            pagination.className = 'pagination-controls';
+            
+            const prevButton = document.createElement('button');
+            prevButton.className = 'pagination-button';
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevButton.disabled = state.page === 0;
+            prevButton.onclick = () => {
+                if (state.page > 0) {
+                    state.page--;
+                    fetchAllPets();
                 }
-            })
-            .catch(error => console.error("Error fetching available pets:", error));
+            };
+
+            const nextButton = document.createElement('button');
+            nextButton.className = 'pagination-button';
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextButton.disabled = (state.page + 1) * state.size >= state.total;
+            nextButton.onclick = () => {
+                if ((state.page + 1) * state.size < state.total) {
+                    state.page++;
+                    fetchAllPets();
+                }
+            };
+
+            const pageInfo = document.createElement('span');
+            pageInfo.className = 'page-info';
+            const totalPages = Math.ceil(state.total / state.size);
+            pageInfo.textContent = `Page ${state.page + 1} of ${totalPages}`;
+
+            pagination.appendChild(prevButton);
+            pagination.appendChild(pageInfo);
+            pagination.appendChild(nextButton);
+            container.appendChild(pagination);
+        }
     }
 
     function renderPets(tabId, pets) {
@@ -37,7 +109,17 @@ document.addEventListener('DOMContentLoaded', function() {
             container.innerHTML = `<div class="empty-state"><h3>No Pets Found</h3><p>${getEmptyStateMessage(tabId)}</p></div>`;
             return;
         }
+
+        // Clear existing content except pagination
+        const existingPagination = container.querySelector('.pagination-controls');
         container.innerHTML = '';
+        if (existingPagination) {
+            container.appendChild(existingPagination);
+        }
+
+        const petsGrid = document.createElement('div');
+        petsGrid.className = 'pets-grid-content';
+        
         pets.forEach(pet => {
             const petCard = document.createElement('div');
             petCard.classList.add('pet-card');
@@ -61,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sessionStorage.setItem('petCenterId', pet.petCenter.id);
                 window.location.href = '/pet-center-profile';
             });
-            petCenter.textContent = pet.petCenter.name; // Nội dung hiển thị
+            petCenter.textContent = pet.petCenter.name;
 
             petInfo.appendChild(petName);
             petInfo.appendChild(petBreed);
@@ -72,14 +154,17 @@ document.addEventListener('DOMContentLoaded', function() {
             petCard.addEventListener('click', function() {
                 showPetDetails(pet);
             });
-            container.appendChild(petCard);
+            petsGrid.appendChild(petCard);
         });
+
+        container.insertBefore(petsGrid, container.querySelector('.pagination-controls'));
     }
 
     function getEmptyStateMessage(tabId) {
         switch(tabId) {
             case 'requested': return "You haven't requested to adopt any pets yet.";
             case 'available': return "There are no pets available for adoption at the moment.";
+            case 'accepted': return "You haven't had any pets accepted for adoption yet.";
             default: return "No pets found.";
         }
     }
